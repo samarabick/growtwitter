@@ -6,6 +6,12 @@ export type User = {
   image?: string;
 };
 
+export type Profile = {
+  username: string;
+  id: string;
+  image?: string;
+};
+
 // User Profile
 
 export type UserProfile = {
