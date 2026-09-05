@@ -3,19 +3,24 @@ import { type Tweet } from "../../types";
 // import { likeTweetThunk } from "./tweetThunks";
 
 type TweetState = {
-  tweets: Tweet[];
+  home: Tweet[];
+  profile: Tweet[];
 };
 
 const initialState: TweetState = {
-  tweets: [],
+  home: [],
+  profile: [],
 };
 
 const tweetSlice = createSlice({
   name: "tweetFeedSlice",
   initialState,
   reducers: {
-    getFeed: (state, action) => {
-      state.tweets = action.payload;
+    getHomeFeed: (state, action) => {
+      state.home = action.payload;
+    },
+    getProfileFeed: (state, action) => {
+      state.profile = action.payload;
     },
   },
   // extraReducers: (builder) => {
@@ -28,6 +33,7 @@ const tweetSlice = createSlice({
   // },
 });
 
-export const { getFeed } = tweetSlice.actions;
+export const { getHomeFeed } = tweetSlice.actions;
+export const { getProfileFeed } = tweetSlice.actions;
 
 export default tweetSlice.reducer;

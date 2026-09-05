@@ -11,14 +11,15 @@ import {
 import { type getProfileFeedProps } from "./tweetService";
 import { type ReplyTweetProps } from "./tweetService";
 import toast from "react-hot-toast";
-import { getFeed as getFeedSlice } from "./tweetSlice";
+import { getHomeFeed as getHomeFeedSlice } from "./tweetSlice";
+import { getProfileFeed as getProfileFeedSlice } from "./tweetSlice";
 
 export const fetchFollowingFeedThunk = createAsyncThunk(
   "tweet/fetchTweetsFeed",
   async (userToken: string, { dispatch }) => {
     const tweets = await getFollowingFeedService(userToken);
 
-    dispatch(getFeedSlice(tweets));
+    dispatch(getHomeFeedSlice(tweets));
   },
 );
 
@@ -29,7 +30,7 @@ export const fetchProfileFeedThunk = createAsyncThunk(
       userToken: userToken,
       userId: userId,
     });
-    dispatch(getFeedSlice(tweets));
+    dispatch(getProfileFeedSlice(tweets));
   },
 );
 
@@ -54,6 +55,8 @@ export const deleteTweetThunk = createAsyncThunk(
       fetchProfileFeedThunk({ userToken: userToken, userId: userId }),
     );
 
+    await dispatch(fetchFollowingFeedThunk(userToken));
+
     toast.success("Tweet excluído!");
   },
 );
@@ -76,11 +79,11 @@ export const createTweetThunk = createAsyncThunk(
     });
 
     await dispatch(fetchFollowingFeedThunk(userToken));
-    toast.success("Tweet postado!");
 
     await dispatch(
       fetchProfileFeedThunk({ userToken: userToken, userId: userId }),
     );
+    toast.success("Tweet postado!");
   },
 );
 
@@ -92,6 +95,7 @@ export const replyTweetThunk = createAsyncThunk(
       tweetId: tweetId,
       userToken: userToken,
     });
+    toast.success("Tweet postado!");
   },
 );
 

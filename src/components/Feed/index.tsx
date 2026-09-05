@@ -6,14 +6,21 @@ import { useNavigate } from "react-router-dom";
 
 interface Props {
   fetchFeed: () => Promise<unknown>;
+  type: "home" | "profile";
 }
 
-export function Feed({ fetchFeed }: Props) {
+export function Feed({ fetchFeed, type }: Props) {
   const userToken = useAppSelector((state) => state.user.user.token);
 
   const userId = useAppSelector((state) => state.user.user.id);
 
-  const tweetsList = useAppSelector((state) => state.feed.tweets);
+  const tweetsList = useAppSelector((state) => {
+    if (type === "home") {
+      return state.feed.home;
+    } else {
+      return state.feed.profile;
+    }
+  });
 
   const navigate = useNavigate();
 

@@ -30,7 +30,6 @@ export function Profile() {
     dispatch(
       loadProfileThunk({ userToken: userLogged.token, userId: profileId }),
     );
-    console.log(profile);
   }, [profileId]);
 
   fetchProfileFeedThunk({ userToken: userLogged.token, userId: profileId });
@@ -104,6 +103,7 @@ export function Profile() {
               }),
             )
           }
+          type="profile"
         />
       </div>
       <div>

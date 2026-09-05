@@ -14,7 +14,10 @@ export function Home() {
   return (
     <>
       <div>
-        <Feed fetchFeed={() => dispatch(fetchFollowingFeedThunk(userToken))} />
+        <Feed
+          fetchFeed={() => dispatch(fetchFollowingFeedThunk(userToken))}
+          type="home"
+        />
       </div>
       <div>
         <button onClick={logout}>Sair</button>
