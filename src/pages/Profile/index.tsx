@@ -1,8 +1,7 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { Feed } from "../../components/Feed";
-import { useLogout } from "../../components/Logout";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import styled from "styled-components";
 import { fetchProfileFeedThunk } from "../../store/tweet/tweetThunks";
 import {
@@ -21,7 +20,6 @@ export function Profile() {
   const params = useParams();
   const profileId = params.id!;
   const userLogged = useAppSelector((state) => state.user.user);
-  const logout = useLogout();
   const navigate = useNavigate();
   const profile = useAppSelector((state) => state.profile);
 
@@ -30,22 +28,20 @@ export function Profile() {
     dispatch(
       loadProfileThunk({ userToken: userLogged.token, userId: profileId }),
     );
-  }, [profileId]);
+  }, [profileId, profile.followers]);
 
   fetchProfileFeedThunk({ userToken: userLogged.token, userId: profileId });
 
   const totalFollowers = profile.followers.length;
-
-  const [numFollowers, setNumFollowers] = useState(totalFollowers);
   const numFollowing: number = profile.following.length;
 
+  const followersArray: Profile[] = profile.followers;
+
+  const userFollow = followersArray.some((item: Profile) => {
+    return item.id === userLogged.id;
+  });
+
   async function handleFollowButton() {
-    const followersArray: Profile[] = profile.followers;
-
-    const userFollow = followersArray.some((item: Profile) => {
-      return item.id === userLogged.id;
-    });
-
     if (userFollow) {
       await dispatch(
         unfollowProfileThunk({
@@ -53,13 +49,11 @@ export function Profile() {
           userId: profileId,
         }),
       );
-      setNumFollowers((prev) => prev - 1);
       console.log("deixou de seguir");
     } else {
       await dispatch(
         followProfileThunk({ userToken: userLogged.token, userId: profileId }),
       );
-      setNumFollowers((prev) => prev + 1);
       console.log("seguiu");
     }
   }
@@ -81,10 +75,20 @@ export function Profile() {
           <p>{profile.name}</p>
           <p>@{profile.username}</p>
           <div>
-            <button onClick={() => handleFollowButton()}>Teste</button>
+            {userLogged.id != profile.id ? (
+              <div>
+                {userFollow ? (
+                  <button onClick={() => handleFollowButton()}>Seguindo</button>
+                ) : (
+                  <button onClick={() => handleFollowButton()}>Seguir</button>
+                )}
+              </div>
+            ) : (
+              <p hidden></p>
+            )}
           </div>
           <p>
-            {numFollowers}
+            {totalFollowers}
             <span> followers</span>
           </p>
           <p>
@@ -105,9 +109,6 @@ export function Profile() {
           }
           type="profile"
         />
-      </div>
-      <div>
-        <button onClick={logout}>Sair</button>
       </div>
     </>
   );

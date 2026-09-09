@@ -24,8 +24,6 @@ export function TweetsFeed({ tweet, userToken, userId }: Props) {
 
   const likestotal: number = tweet.likes.length;
 
-  const [totalLikes, setTotalLikes] = useState(likestotal);
-
   async function handleLike() {
     const arrayLikes: Like[] = tweet.likes;
 
@@ -41,7 +39,6 @@ export function TweetsFeed({ tweet, userToken, userId }: Props) {
           userId: userIdLogged,
         }),
       );
-      setTotalLikes((prev) => prev - 1);
     } else {
       await dispatch(
         likeTweetThunk({
@@ -50,7 +47,6 @@ export function TweetsFeed({ tweet, userToken, userId }: Props) {
           userId: userIdLogged,
         }),
       );
-      setTotalLikes((prev) => prev + 1);
     }
   }
 
@@ -82,7 +78,7 @@ export function TweetsFeed({ tweet, userToken, userId }: Props) {
         <Link to={`/profile/${tweet.author.id}`}>{tweet.author.name}</Link>
         <p>{tweet.content}</p>
         <div>
-          <button onClick={() => handleLike()}>Likes {totalLikes}</button>
+          <button onClick={() => handleLike()}>Likes {likestotal}</button>
         </div>
         <div>
           <button onClick={() => setHandleShowReply(true)}>Responder</button>

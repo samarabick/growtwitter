@@ -3,6 +3,7 @@ import { useAppDispatch, useAppSelector } from "../store/index";
 import { NewTweet } from "../components/Tweet/NewTweet";
 import { createTweetThunk } from "../store/tweet/tweetThunks";
 import { type CreateTweetProps } from "../store/tweet/tweetService";
+import { useLogout } from "../components/Logout";
 export function MainLayout() {
   const userId = useAppSelector((state) => state.user.user.id);
 
@@ -21,13 +22,19 @@ export function MainLayout() {
     );
   }
 
+  const logout = useLogout();
+
   return (
     <>
-      <Link to="/">Explorar</Link>
+      <Link to="/home">Página inicial</Link>
+      <br></br>
+      <Link to="/explore">Explorar</Link>
       <br />
       <Link to={`/profile/${userId}`}>Perfil</Link>
       <br />
       <NewTweet onSubmit={handleCreateTweet} />
+      <br></br>
+      <button onClick={() => logout()}>Sair</button>
       <Outlet />
     </>
   );
