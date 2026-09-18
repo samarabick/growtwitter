@@ -9,6 +9,7 @@ import {
   unlikeTweetThunk,
 } from "../../store/tweet/tweetThunks";
 import { ReplyTweet } from "./ReplyTweet";
+import { Heart, MessageSquare, Trash } from "lucide-react";
 // import { NewTweet } from "./NewTweet";
 
 interface Props {
@@ -24,13 +25,13 @@ export function TweetsFeed({ tweet, userToken, userId }: Props) {
 
   const likestotal: number = tweet.likes.length;
 
+  const arrayLikes: Like[] = tweet.likes;
+
+  const userLiked = arrayLikes.some((item: Like) => {
+    return item.author.id === userIdLogged;
+  });
+
   async function handleLike() {
-    const arrayLikes: Like[] = tweet.likes;
-
-    const userLiked = arrayLikes.some((item: Like) => {
-      return item.author.id === userIdLogged;
-    });
-
     if (userLiked) {
       await dispatch(
         unlikeTweetThunk({
@@ -50,6 +51,12 @@ export function TweetsFeed({ tweet, userToken, userId }: Props) {
     }
   }
 
+  const [isAnimating, setIsAnimating] = useState(false);
+
+  setTimeout(() => {
+    setIsAnimating(false);
+  }, 600);
+
   async function handleDelete() {
     await dispatch(
       deleteTweetThunk({
@@ -65,6 +72,7 @@ export function TweetsFeed({ tweet, userToken, userId }: Props) {
 
   return (
     <>
+      {/* Input de responder */}
       {showHandleReply ? (
         <div>
           <p>Responder à @{tweet.author.username}</p>
@@ -74,26 +82,76 @@ export function TweetsFeed({ tweet, userToken, userId }: Props) {
       ) : (
         <div hidden></div>
       )}
-      <div key={tweet.id}>
-        <Link to={`/profile/${tweet.author.id}`}>{tweet.author.name}</Link>
-        <p>{tweet.content}</p>
-        <div>
-          <button onClick={() => handleLike()}>Likes {likestotal}</button>
+      {/* Tweet */}
+      <div
+        key={tweet.id}
+        className="m-1 border-2 rounded-lg shadow-md border-cupid"
+      >
+        {/* "Cabeçalho" do Tweet */}
+        <div className="flex">
+          <div className="p-1">
+            {tweet.author.imageUrl != null ? (
+              <img
+                className="max-w-10 rounded-full inline"
+                src={tweet.author.imageUrl}
+                alt=""
+              />
+            ) : (
+              <img
+                className="max-w-10 rounded-full inline"
+                src="https://voxnews.com.br/wp-content/uploads/2017/04/unnamed.png"
+                alt=""
+              />
+            )}
+          </div>
+          <div className="self-center">
+            <Link
+              className="text-base font-semibold"
+              to={`/profile/${tweet.author.id}`}
+            >
+              {tweet.author.name}
+            </Link>
+            <Link className="text-base p-1" to={`/profile/${tweet.author.id}`}>
+              {`@${tweet.author.username}`}
+            </Link>
+          </div>
         </div>
-        <div>
-          <button onClick={() => setHandleShowReply(true)}>Responder</button>
+        {/* Conteúdo do tweet */}
+        <div className="p-1">
+          <p>{tweet.content}</p>
         </div>
-        <div>
-          {tweet.author.id === userId ? (
-            <button onClick={() => handleDelete()}>Excluir</button>
-          ) : (
-            <button hidden></button>
-          )}
-        </div>
-        <div>
-          <button onClick={() => setShowReplies((prev) => !prev)}>
-            Respostas
+        {/* Ações inferiores do tweet */}
+        <div className="pl-1">
+          <button title="Responder" onClick={() => setHandleShowReply(true)}>
+            <MessageSquare className="size-4.5 inline align-sub pr-1" />
           </button>
+          <button title="Curtir" onClick={() => handleLike()}>
+            <Heart
+              onClick={() => setIsAnimating(true)}
+              className={`size-4.5 inline ${isAnimating ? "heart-like text-pink-500" : ""} ${userLiked ? "fill-pink-500 text-pink-500" : ""}`}
+            />
+            <span className="text-sm align-middle pr-1">{likestotal}</span>
+          </button>
+
+          <button title="Excluir">
+            {tweet.author.id === userId ? (
+              <Trash className="size-4.5 inline" onClick={() => handleDelete()}>
+                Excluir
+              </Trash>
+            ) : (
+              <button hidden></button>
+            )}
+          </button>
+        </div>
+        <div className="pl-1">
+          <button
+            title="Ver respostas"
+            className="text-sm"
+            onClick={() => setShowReplies((prev) => !prev)}
+          >
+            Ver respostas
+          </button>
+          {/* Respostas do tweet */}
           <div>
             {showReplies &&
               tweet.replies.length > 0 &&
@@ -107,8 +165,6 @@ export function TweetsFeed({ tweet, userToken, userId }: Props) {
           </div>
         </div>
       </div>
-
-      <hr />
     </>
   );
 }
