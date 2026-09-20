@@ -10,6 +10,7 @@ import {
 } from "../../store/tweet/tweetThunks";
 import { ReplyTweet } from "./ReplyTweet";
 import { Heart, MessageSquare, Trash } from "lucide-react";
+import { DeleteTweetModal } from "./DeleteTweetModal";
 // import { NewTweet } from "./NewTweet";
 
 interface Props {
@@ -57,6 +58,8 @@ export function TweetsFeed({ tweet, userToken, userId }: Props) {
     setIsAnimating(false);
   }, 600);
 
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
   async function handleDelete() {
     await dispatch(
       deleteTweetThunk({
@@ -65,6 +68,15 @@ export function TweetsFeed({ tweet, userToken, userId }: Props) {
         userId: userId,
       }),
     );
+  }
+
+  function closeDeleteModal() {
+    setIsDeleteModalOpen(false);
+  }
+
+  function confirmDeleteModal() {
+    setIsDeleteModalOpen(false);
+    handleDelete();
   }
 
   const [showHandleReply, setHandleShowReply] = useState(false);
@@ -122,9 +134,11 @@ export function TweetsFeed({ tweet, userToken, userId }: Props) {
         </div>
         {/* Ações inferiores do tweet */}
         <div className="pl-1">
+          {/* Responder */}
           <button title="Responder" onClick={() => setHandleShowReply(true)}>
             <MessageSquare className="size-4.5 inline align-sub pr-1" />
           </button>
+          {/* curtir */}
           <button title="Curtir" onClick={() => handleLike()}>
             <Heart
               onClick={() => setIsAnimating(true)}
@@ -132,18 +146,30 @@ export function TweetsFeed({ tweet, userToken, userId }: Props) {
             />
             <span className="text-sm align-middle pr-1">{likestotal}</span>
           </button>
-
+          {/* Excluir */}
           <button title="Excluir">
             {tweet.author.id === userId ? (
-              <Trash className="size-4.5 inline" onClick={() => handleDelete()}>
+              <Trash
+                className="size-4.5 inline"
+                onClick={() => setIsDeleteModalOpen(true)}
+              >
                 Excluir
               </Trash>
             ) : (
               <button hidden></button>
             )}
           </button>
+          {/* Modal de confirmação de exclusão  */}
+          <div>
+            <DeleteTweetModal
+              isDeleteModalOpen={isDeleteModalOpen}
+              closeDeleteModal={closeDeleteModal}
+              confirmDeleteModal={confirmDeleteModal}
+            />
+          </div>
         </div>
         <div className="pl-1">
+          {/* Ver respostas */}
           <button
             title="Ver respostas"
             className="text-sm"
