@@ -11,7 +11,6 @@ import {
 import { ReplyTweet } from "./ReplyTweet";
 import { Heart, MessageSquare, Trash } from "lucide-react";
 import { DeleteTweetModal } from "./DeleteTweetModal";
-// import { NewTweet } from "./NewTweet";
 
 interface Props {
   tweet: Tweet;
@@ -95,10 +94,7 @@ export function TweetsFeed({ tweet, userToken, userId }: Props) {
         <div hidden></div>
       )}
       {/* Tweet */}
-      <div
-        key={tweet.id}
-        className="m-1 border-2 rounded-lg shadow-md border-cupid"
-      >
+      <div key={tweet.id} className="m-1 border-b shadow-b-md border-cupid">
         {/* "Cabeçalho" do Tweet */}
         <div className="flex">
           <div className="p-1">
