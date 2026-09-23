@@ -13,8 +13,8 @@ export function ReplyTweet({ tweetId, userToken }: Props) {
 
   return (
     <>
-      <input
-        type="text"
+      <textarea
+        className="px-3 py-2 resize-none w-120 2xl:w-160"
         value={text}
         onChange={(e) => setText(e.target.value)}
         placeholder="O que está acontecendo?"

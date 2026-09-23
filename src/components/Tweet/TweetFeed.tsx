@@ -9,8 +9,10 @@ import {
   unlikeTweetThunk,
 } from "../../store/tweet/tweetThunks";
 import { ReplyTweet } from "./ReplyTweet";
-import { Heart, MessageSquare, Trash } from "lucide-react";
+
 import { DeleteTweetModal } from "./DeleteTweetModal";
+import { ChatCircleIcon, HeartIcon, TrashIcon } from "@phosphor-icons/react";
+import { ReplyTweetModal } from "./ReplyTweetModal";
 
 interface Props {
   tweet: Tweet;
@@ -58,6 +60,7 @@ export function TweetsFeed({ tweet, userToken, userId }: Props) {
   }, 600);
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isReplyModalOpen, setIsReplyModalOpen] = useState(false);
 
   async function handleDelete() {
     await dispatch(
@@ -78,6 +81,14 @@ export function TweetsFeed({ tweet, userToken, userId }: Props) {
     handleDelete();
   }
 
+  function closeReplyModal() {
+    setIsReplyModalOpen(false);
+  }
+
+  // function confirmReplyModal() {
+  //   isReplyModalOpen(false);
+  // }
+
   const [showHandleReply, setHandleShowReply] = useState(false);
   const [showReplies, setShowReplies] = useState(false);
 
@@ -94,7 +105,7 @@ export function TweetsFeed({ tweet, userToken, userId }: Props) {
         <div hidden></div>
       )}
       {/* Tweet */}
-      <div key={tweet.id} className="m-1 border-b shadow-b-md border-cupid">
+      <div key={tweet.id} className="m-1">
         {/* "Cabeçalho" do Tweet */}
         <div className="flex">
           <div className="p-1">
@@ -131,26 +142,27 @@ export function TweetsFeed({ tweet, userToken, userId }: Props) {
         {/* Ações inferiores do tweet */}
         <div className="pl-1">
           {/* Responder */}
-          <button title="Responder" onClick={() => setHandleShowReply(true)}>
-            <MessageSquare className="size-4.5 inline align-sub pr-1" />
+          <button title="Responder" onClick={() => setIsReplyModalOpen(true)}>
+            <ChatCircleIcon className="size-5 inline pr-1" />
           </button>
           {/* curtir */}
           <button title="Curtir" onClick={() => handleLike()}>
-            <Heart
+            <HeartIcon
               onClick={() => setIsAnimating(true)}
-              className={`size-4.5 inline ${isAnimating ? "heart-like text-pink-500" : ""} ${userLiked ? "fill-pink-500 text-pink-500" : ""}`}
+              weight={userLiked ? "fill" : "regular"}
+              className={`size-4.5 inline ${isAnimating ? "heart-like text-pink-500 fill-pink-500" : ""} ${userLiked && "fill-pink-500"}`}
             />
             <span className="text-sm align-middle pr-1">{likestotal}</span>
           </button>
           {/* Excluir */}
           <button title="Excluir">
             {tweet.author.id === userId ? (
-              <Trash
+              <TrashIcon
                 className="size-4.5 inline"
                 onClick={() => setIsDeleteModalOpen(true)}
               >
                 Excluir
-              </Trash>
+              </TrashIcon>
             ) : (
               <button hidden></button>
             )}
@@ -173,19 +185,24 @@ export function TweetsFeed({ tweet, userToken, userId }: Props) {
           >
             Ver respostas
           </button>
-          {/* Respostas do tweet */}
           <div>
-            {showReplies &&
-              tweet.replies.length > 0 &&
-              tweet.replies.map((reply) => (
-                <TweetsFeed
-                  tweet={reply}
-                  userToken={userToken}
-                  userId={userId}
-                />
-              ))}
+            <ReplyTweetModal
+              tweet={tweet}
+              userToken={userToken}
+              userId={userId}
+              isReplyModalOpen={isReplyModalOpen}
+              closeReplyModal={closeReplyModal}
+            />
           </div>
         </div>
+      </div>
+      {/* Respostas do tweet */}
+      <div className="pl-5">
+        {showReplies &&
+          tweet.replies.length > 0 &&
+          tweet.replies.map((reply) => (
+            <TweetsFeed tweet={reply} userToken={userToken} userId={userId} />
+          ))}
       </div>
     </>
   );
