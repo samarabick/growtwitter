@@ -34,7 +34,7 @@ export function ReplyTweetModal({
                   userId={userId}
                 />
               </div>
-              <div className="mt-4">
+              <div className="my-4">
                 <p className="inline">Respondendo a </p>
                 <p className="inline text-cupid font-semibold">{`@${tweet.author.username}`}</p>
               </div>

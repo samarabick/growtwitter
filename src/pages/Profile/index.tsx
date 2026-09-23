@@ -1,7 +1,7 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { Feed } from "../../components/Feed";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { fetchProfileFeedThunk } from "../../store/tweet/tweetThunks";
 import {
@@ -10,6 +10,8 @@ import {
   unfollowProfileThunk,
 } from "../../store/profile/profileThunks";
 import { type Profile } from "../../types";
+import { ArrowLeftIcon, DotOutlineIcon } from "@phosphor-icons/react";
+import { UnfollowModal } from "./UnfollowModal";
 
 const ProfilePicture = styled.img`
   width: 50px;
@@ -23,6 +25,7 @@ export function Profile() {
   const navigate = useNavigate();
   const profile = useAppSelector((state) => state.profile);
 
+  // Carregar perfil
   const dispatch = useAppDispatch();
   useEffect(() => {
     dispatch(
@@ -32,69 +35,124 @@ export function Profile() {
 
   fetchProfileFeedThunk({ userToken: userLogged.token, userId: profileId });
 
+  // Variáveis utilizadas no componente
+
   const totalFollowers = profile.followers.length;
   const numFollowing: number = profile.following.length;
+  const totalPosts = useAppSelector((state) => state.feed.profile.length);
 
   const followersArray: Profile[] = profile.followers;
+
+  // Estado do modal
+
+  const [isUnfollowModalOpen, setIsUnfollowModalOpen] = useState(false);
+
+  // Função para fechar unfollow modal
+
+  function closeUnfollowModal() {
+    setIsUnfollowModalOpen(false);
+  }
+
+  async function confirmUnfollowModal() {
+    await dispatch(
+      unfollowProfileThunk({
+        userToken: userLogged.token,
+        userId: profileId,
+      }),
+    );
+    setIsUnfollowModalOpen(false);
+  }
+
+  // Verifica se o usuário já segue
 
   const userFollow = followersArray.some((item: Profile) => {
     return item.id === userLogged.id;
   });
 
+  // Função de seguir/deixar de seguir
+
   async function handleFollowButton() {
     if (userFollow) {
-      await dispatch(
-        unfollowProfileThunk({
-          userToken: userLogged.token,
-          userId: profileId,
-        }),
-      );
-      console.log("deixou de seguir");
+      setIsUnfollowModalOpen(true);
     } else {
       await dispatch(
         followProfileThunk({ userToken: userLogged.token, userId: profileId }),
       );
-      console.log("seguiu");
     }
   }
 
   return (
     <>
-      <div>
-        <button onClick={() => navigate("/home")}>🠐</button>
+      <div className="flex py-3 text-md sm:sticky sm:top-0 bg-tutu/80 backdrop-blur-md">
+        <button onClick={() => navigate("/home")}>
+          <ArrowLeftIcon weight="light" className="text-lg" />
+        </button>
         <p>{profile.name}</p>
+        <DotOutlineIcon weight="fill" className="self-center text-gray-500" />
+        <div className="flex text-gray-500">
+          <span>{totalPosts}</span>
+          <p className="  ml-1">Posts</p>
+        </div>
+      </div>
+      <div className="border-b border-gray-300">
         <div>
-          {profile.imageUrl != null ? (
-            <ProfilePicture src={profile.imageUrl} alt="" />
-          ) : (
-            <ProfilePicture
-              src="https://voxnews.com.br/wp-content/uploads/2017/04/unnamed.png"
-              alt=""
-            />
-          )}
-          <p>{profile.name}</p>
-          <p>@{profile.username}</p>
-          <div>
-            {userLogged.id != profile.id ? (
-              <div>
-                {userFollow ? (
-                  <button onClick={() => handleFollowButton()}>Seguindo</button>
-                ) : (
-                  <button onClick={() => handleFollowButton()}>Seguir</button>
-                )}
-              </div>
+          {/* Foto perfil + botão de seguir */}
+          <div className="flex justify-between">
+            {profile.imageUrl != null ? (
+              <ProfilePicture src={profile.imageUrl} alt="" />
             ) : (
-              <p hidden></p>
+              <ProfilePicture
+                src="https://voxnews.com.br/wp-content/uploads/2017/04/unnamed.png"
+                alt=""
+              />
             )}
+
+            <div className="self-center">
+              {userLogged.id != profile.id && (
+                <div>
+                  {userFollow ? (
+                    <button
+                      className="btn border-cupid text-cupid"
+                      onClick={() => handleFollowButton()}
+                    >
+                      Seguindo
+                    </button>
+                  ) : (
+                    <button
+                      className="btn border-cupid bg-cupid text-white"
+                      onClick={() => handleFollowButton()}
+                    >
+                      Seguir
+                    </button>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
-          <p>
-            {totalFollowers}
-            <span> followers</span>
-          </p>
-          <p>
-            {numFollowing}
-            <span> following</span>
-          </p>
+          <div>
+            <p className="font-bold text-xl">{profile.name}</p>
+          </div>
+          <div>
+            <p className="text-sm">@{profile.username}</p>
+          </div>
+          <div className="flex mb-1">
+            <p className="text-sm">
+              {totalFollowers}
+              <span className="text-gray-400 text-sm"> Seguidores</span>
+            </p>
+            <p className="text-sm mx-2">
+              {numFollowing}
+              <span className="text-gray-400 text-sm"> Seguindo</span>
+            </p>
+          </div>
+        </div>
+        <div>
+          <UnfollowModal
+            isUnfollowModalOpen={isUnfollowModalOpen}
+            closeUnfollowModal={closeUnfollowModal}
+            confirmUnfollowModal={confirmUnfollowModal}
+            profileUsername={profile.username}
+          />
         </div>
       </div>
       <div>

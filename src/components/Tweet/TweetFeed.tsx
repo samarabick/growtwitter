@@ -85,10 +85,6 @@ export function TweetsFeed({ tweet, userToken, userId }: Props) {
     setIsReplyModalOpen(false);
   }
 
-  // function confirmReplyModal() {
-  //   isReplyModalOpen(false);
-  // }
-
   const [showHandleReply, setHandleShowReply] = useState(false);
   const [showReplies, setShowReplies] = useState(false);
 

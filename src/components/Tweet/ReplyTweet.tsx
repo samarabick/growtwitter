@@ -19,21 +19,24 @@ export function ReplyTweet({ tweetId, userToken }: Props) {
         onChange={(e) => setText(e.target.value)}
         placeholder="O que está acontecendo?"
       />
-      <button
-        onClick={async () => {
-          await dispatch(
-            replyTweetThunk({
-              content: text,
-              tweetId: tweetId,
-              userToken: userToken,
-            }),
-          );
-          console.log("tweet respondido");
-          setText("");
-        }}
-      >
-        Tweetar
-      </button>
+      <div className="flex justify-end w-120 2xl:w-160">
+        <button
+          className="btn border-cupid bg-cupid text-white mt-1"
+          onClick={async () => {
+            await dispatch(
+              replyTweetThunk({
+                content: text,
+                tweetId: tweetId,
+                userToken: userToken,
+              }),
+            );
+            console.log("tweet respondido");
+            setText("");
+          }}
+        >
+          Tweetar
+        </button>
+      </div>
     </>
   );
 }

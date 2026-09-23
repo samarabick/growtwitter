@@ -1,8 +1,5 @@
 import { Link, Outlet, useLocation } from "react-router-dom";
 import { useAppSelector } from "../store/index";
-// import { NewTweet } from "../components/Tweet/NewTweet";
-// import { createTweetThunk } from "../store/tweet/tweetThunks";
-// import { type CreateTweetProps } from "../store/tweet/tweetService";
 import { useLogout } from "../components/Logout";
 import { useState } from "react";
 import { NewTweetModal } from "../components/Tweet/NewTweetModal";
@@ -12,6 +9,8 @@ import {
   MagnifyingGlassIcon,
   UserIcon,
 } from "@phosphor-icons/react";
+import logo from "../assets/miawtter.png";
+
 export function MainLayout() {
   const userId = useAppSelector((state) => state.user.user.id);
 
@@ -27,10 +26,14 @@ export function MainLayout() {
 
   return (
     <>
+      <header className="w-55 sm:sticky sm:top-0">
+        <img src={logo} alt="" className="pt-3 ml-10" />
+      </header>
+
       <div className="grid sm:grid-cols-[200px_minmax(0,1fr)] md:grid-cols-[250px_minmax(0,1fr)250px] lg:grid-cols-[250px_minmax(0,1fr)_250px] lg:mx-20 2xl:mx-60">
-        <aside className="sm:h-screen sm:sticky sm:top-0 sm:pl-2 pt-5">
+        <aside className="sm:h-screen sm:sticky sm:top-15 sm:pl-2 text-lg">
           {/* Link para Página Inicial  */}
-          <div>
+          <div className="pt-2">
             {location === "/home" ? (
               <Link to="/home">
                 <HouseIcon
@@ -69,7 +72,7 @@ export function MainLayout() {
             )}
           </div>
           <div>
-            {location.includes("/profile") ? (
+            {location === `/profile/${userId}` ? (
               <Link to={`/profile/${userId}`}>
                 <UserIcon
                   weight="fill"
@@ -114,7 +117,7 @@ export function MainLayout() {
         <div>
           {/* Novo tweet  */}
           {location === "/home" && (
-            <div className="not-lg:hidden justify-self-center pt-5">
+            <div className="not-lg:hidden justify-self-center pt-5 ">
               <NewTweet onSubmit={closeNewTweetModal} />
             </div>
           )}
