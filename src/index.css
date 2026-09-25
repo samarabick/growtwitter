@@ -4,9 +4,13 @@
 @theme {
   --color-lavender-mist: #dbdaec;
   --color-zircon: #e9edf6;
-  --color-cupid: #fcbfd4;
-  --color-azalea: #ffd0e2;
+  /* --color-cupid: #fcbfd4; */
+  --color-cupid: #0f102e;
+  /* --color-azalea: #ffd0e2; */
+  --color-azalea: #f68db3;
   --color-tutu: #fdeef5;
+  --color-tututu: #fce3ee;
+  --color-tututu2: #fcf2f7;
 
   --font-sans: "Plus Jakarta Sans", sans-serif;
 }
@@ -30,8 +34,8 @@ button {
 
 .btn {
   border-width: 1px;
-  border-radius: 12px;
-  padding: 5px;
+  border-radius: 20px;
+  padding: 8px;
 }
 
 Link {

@@ -41,7 +41,7 @@ export function Feed({ fetchFeed, type }: Props) {
         {tweetsList ? (
           tweetsList.map((tweet: Tweet) => (
             <>
-              <div className="shadow-b-md border-b border-cupid">
+              <div className="shadow-b-md border-t border-tututu ">
                 <TweetsFeed
                   tweet={tweet}
                   userToken={userToken}

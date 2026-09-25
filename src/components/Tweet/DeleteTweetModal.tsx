@@ -23,9 +23,11 @@ export function DeleteTweetModal({
         onClose={() => closeDeleteModal()}
         className="relative z-50"
       >
-        <div className="fixed inset-0 flex w-screen items-center justify-center p-4 backdrop-blur-[1.5px] bg-black/15">
-          <DialogPanel className="max-w-lg space-y-4 border-2 border-cupid rounded-lg bg-tutu p-12 shadow-md">
-            <DialogTitle className="font-bold">Excluir post?</DialogTitle>
+        <div className="fixed inset-0 flex w-screen items-center justify-center p-4 backdrop-blur-[2px] bg-black/1">
+          <DialogPanel className="max-w-lg space-y-4 border-2 border-azalea rounded-lg bg-tututu2 p-12 shadow-md">
+            <DialogTitle className="font-bold text-cupid">
+              Excluir post?
+            </DialogTitle>
             <Description>
               Essa ação não poderá ser desfeita, e o post será removido do seu
               perfil.

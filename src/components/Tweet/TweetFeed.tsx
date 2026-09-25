@@ -146,7 +146,7 @@ export function TweetsFeed({ tweet, userToken, userId }: Props) {
             <HeartIcon
               onClick={() => setIsAnimating(true)}
               weight={userLiked ? "fill" : "regular"}
-              className={`size-4.5 inline ${isAnimating ? "heart-like text-pink-500 fill-pink-500" : ""} ${userLiked && "fill-pink-500"}`}
+              className={`size-4.5 inline ${isAnimating ? "heart-like text-azalea fill-azalea" : ""} ${userLiked && "fill-azalea"}`}
             />
             <span className="text-sm align-middle pr-1">{likestotal}</span>
           </button>
@@ -194,10 +194,13 @@ export function TweetsFeed({ tweet, userToken, userId }: Props) {
       </div>
       {/* Respostas do tweet */}
       <div className="pl-5">
-        {showReplies &&
-          tweet.replies.length > 0 &&
-          tweet.replies.map((reply) => (
-            <TweetsFeed tweet={reply} userToken={userToken} userId={userId} />
+        {showReplies === true &&
+          (tweet.replies.length > 0 ? (
+            tweet.replies.map((reply) => (
+              <TweetsFeed tweet={reply} userToken={userToken} userId={userId} />
+            ))
+          ) : (
+            <p>Nenhuma Resposta</p>
           ))}
       </div>
     </>

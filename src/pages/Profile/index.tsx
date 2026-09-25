@@ -83,7 +83,7 @@ export function Profile() {
 
   return (
     <>
-      <div className="flex py-3 text-md sm:sticky sm:top-0 bg-tutu/80 backdrop-blur-md">
+      <div className="flex py-3 px-3 text-md bg-tututu2/80 rounded-t-4xl backdrop-blur-md">
         <button onClick={() => navigate("/home")}>
           <ArrowLeftIcon weight="light" className="text-lg" />
         </button>
@@ -94,8 +94,8 @@ export function Profile() {
           <p className="  ml-1">Posts</p>
         </div>
       </div>
-      <div className="border-b border-gray-300">
-        <div>
+      <div>
+        <div className="px-5">
           {/* Foto perfil + botão de seguir */}
           <div className="flex justify-between">
             {profile.imageUrl != null ? (
