@@ -20,7 +20,7 @@ export function ReplyTweet({ tweetId, userToken, userImage, onSubmit }: Props) {
           <img
             src={userImage}
             alt=""
-            className="max-w-10 rounded-full inline"
+            className="img-profile tweet-profile-pic inline"
           />
         </div>
         <textarea

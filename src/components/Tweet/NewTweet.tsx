@@ -22,7 +22,7 @@ export function NewTweet({ onSubmit }: Props) {
           <img
             src={userLogged.image}
             alt=""
-            className="max-w-10 rounded-full inline"
+            className="tweet-profile-pic img-profile inline"
           />
         </div>
 

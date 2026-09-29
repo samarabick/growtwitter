@@ -10,6 +10,7 @@ import {
   UserIcon,
 } from "@phosphor-icons/react";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
+import meowtter from "../assets/meowtter.png";
 
 export function MainLayout() {
   const user = useAppSelector((state) => state.user.user);
@@ -27,9 +28,12 @@ export function MainLayout() {
 
   return (
     <>
-      <div className="grid sm:grid-cols-[200px_minmax(0,1fr)] md:grid-cols-[250px_minmax(0,1fr)250px] lg:grid-cols-[250px_minmax(0,1fr)_250px] lg:mx-20 2xl:mx-85">
+      <div className="grid sm:grid-cols-[200px_minmax(0,1fr)] md:grid-cols-[350px_minmax(0,1fr)350px] lg:grid-cols-[250px_minmax(0,1fr)_250px] lg:mx-20 2xl:mx-50">
         <aside className="sm:h-screen sm:sticky sm:top-0 sm:pl-2 text-xl relative border border-tututu rounded-4xl bg-tututu2 grid">
-          <div className="mt-15 px-4">
+          <div className="mt-10 px-4">
+            <div>
+              <img src={meowtter} alt="" />
+            </div>
             {/* Link para Página Inicial  */}
             <div className="pt-2">
               {location === "/home" ? (
@@ -98,13 +102,13 @@ export function MainLayout() {
             </div>
           </div>
 
-          <div className="sm:absolute sm:bottom-10 btn hover:bg-cupid/20 transition duration-200 text-cupid justify-self-center">
+          <div className="sm:absolute sm:bottom-10 hover:bg-cupid/20 transition duration-200 text-cupid justify-self-center btn">
             <Menu>
               <MenuButton className="flex">
                 <img
                   src={user.image}
                   alt=""
-                  className="mainLayout-profile-pic mx-1"
+                  className="mainLayout-profile-pic img-profile mx-1"
                 />
                 <span>@</span>
                 {user.username}
@@ -130,7 +134,7 @@ export function MainLayout() {
         <div className="border border-tututu rounded-4xl bg-tututu2 mx-3">
           {/* Novo tweet  */}
           {location === "/home" && (
-            <div className="not-lg:hidden justify-self-center py-5 ">
+            <div className="not-xl:hidden justify-self-center py-5 ">
               <NewTweet onSubmit={closeNewTweetModal} />
             </div>
           )}

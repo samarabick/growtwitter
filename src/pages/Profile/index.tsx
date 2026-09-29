@@ -93,12 +93,16 @@ export function Profile() {
           {/* Foto perfil + botão de seguir */}
           <div className="flex justify-between">
             {profile.imageUrl != null ? (
-              <img src={profile.imageUrl} alt="" className="profile-pic" />
+              <img
+                src={profile.imageUrl}
+                alt=""
+                className="profile-pic img-profile"
+              />
             ) : (
               <img
                 src="https://voxnews.com.br/wp-content/uploads/2017/04/unnamed.png"
                 alt=""
-                className="profile-pic"
+                className="profile-pic img-profile"
               />
             )}
 

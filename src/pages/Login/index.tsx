@@ -21,7 +21,10 @@ export function Login() {
 
   async function handleLogin({ username, password }: LoginProps) {
     const result = await dispatch(
-      loadLogin({ username: username, password: password }),
+      loadLogin({
+        username: username,
+        password: password,
+      }),
     );
 
     if (loadLogin.fulfilled.match(result)) {

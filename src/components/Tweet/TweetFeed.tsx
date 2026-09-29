@@ -104,7 +104,7 @@ export function TweetsFeed({ tweet, userToken, userId, isNotReply }: Props) {
             {tweet.author.imageUrl != null ? (
               <Link to={`/profile/${tweet.author.id}`}>
                 <img
-                  className="tweet-profile-pic rounded-full inline"
+                  className="img-profile tweet-profile-pic inline"
                   src={tweet.author.imageUrl}
                   alt=""
                 />
@@ -112,7 +112,7 @@ export function TweetsFeed({ tweet, userToken, userId, isNotReply }: Props) {
             ) : (
               <Link to={`/profile/${tweet.author.id}`}>
                 <img
-                  className="max-w-10 rounded-full inline"
+                  className="img-profile tweet-profile-pic inline"
                   src="https://voxnews.com.br/wp-content/uploads/2017/04/unnamed.png"
                   alt=""
                 />
