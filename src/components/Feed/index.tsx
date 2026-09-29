@@ -10,10 +10,13 @@ interface Props {
 }
 
 export function Feed({ fetchFeed, type }: Props) {
-  const userToken = useAppSelector((state) => state.user.user.token);
+  // Variáveis
+  const userLogged = useAppSelector((state) => state.user.user);
+  const userToken = userLogged.token;
+  const userId = userLogged.id;
+  const navigate = useNavigate();
 
-  const userId = useAppSelector((state) => state.user.user.id);
-
+  // Indica se deve chamar home ou profile da store
   const tweetsList = useAppSelector((state) => {
     if (type === "home") {
       return state.feed.home;
@@ -21,8 +24,6 @@ export function Feed({ fetchFeed, type }: Props) {
       return state.feed.profile;
     }
   });
-
-  const navigate = useNavigate();
 
   useEffect(() => {
     fetchFeed();
@@ -46,6 +47,7 @@ export function Feed({ fetchFeed, type }: Props) {
                   tweet={tweet}
                   userToken={userToken}
                   userId={userId}
+                  isNotReply={true}
                 />
               </div>
             </>

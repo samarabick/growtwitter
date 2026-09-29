@@ -1,12 +1,13 @@
 import { Description, Dialog, DialogPanel } from "@headlessui/react";
-import type { Tweet } from "../../types";
-import { ReplyTweet } from "./ReplyTweet";
-import { TweetsFeed } from "./TweetFeed";
+import type { Tweet } from "../../../types/index";
+import { ReplyTweet } from "../ReplyTweet";
+import { TweetsFeed } from "../TweetFeed";
 
 interface Props {
   tweet: Tweet;
   userToken: string;
   userId: string;
+  userImage: string | undefined;
   isReplyModalOpen: boolean;
   closeReplyModal: () => void;
 }
@@ -14,6 +15,7 @@ export function ReplyTweetModal({
   tweet,
   userToken,
   userId,
+  userImage,
   isReplyModalOpen,
   closeReplyModal,
 }: Props) {
@@ -25,7 +27,7 @@ export function ReplyTweetModal({
         className="relative z-50"
       >
         <div className="fixed inset-0 flex w-screen items-center justify-center p-4 backdrop-blur-[2px] bg-black/10">
-          <DialogPanel className="relative max-w-3xl max space-y-6 border-2 border-azalea rounded-lg bg-tututu2 p-12 shadow-md ">
+          <DialogPanel className="relative max-w-3xl max space-y-6 modal">
             <Description>
               <div>
                 <TweetsFeed
@@ -39,7 +41,12 @@ export function ReplyTweetModal({
                 <p className="inline text-cupid font-semibold">{`@${tweet.author.username}`}</p>
               </div>
               <div>
-                <ReplyTweet tweetId={tweet.id} userToken={userToken} />
+                <ReplyTweet
+                  tweetId={tweet.id}
+                  userToken={userToken}
+                  userImage={userImage}
+                  onSubmit={closeReplyModal}
+                />
               </div>
             </Description>
             {/* Botão de fechar modal  */}

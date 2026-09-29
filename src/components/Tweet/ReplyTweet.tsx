@@ -4,24 +4,36 @@ import { useAppDispatch } from "../../store";
 interface Props {
   tweetId: string;
   userToken: string;
+  userImage: string | undefined;
+  onSubmit: () => void;
 }
 
-export function ReplyTweet({ tweetId, userToken }: Props) {
+export function ReplyTweet({ tweetId, userToken, userImage, onSubmit }: Props) {
+  // Variáveis
   const [text, setText] = useState("");
-
   const dispatch = useAppDispatch();
 
   return (
     <>
-      <textarea
-        className="px-3 py-2 resize-none w-120 2xl:w-160"
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-        placeholder="O que está acontecendo?"
-      />
-      <div className="flex justify-end w-120 2xl:w-160">
+      <div className="flex">
+        <div className="mx-2">
+          <img
+            src={userImage}
+            alt=""
+            className="max-w-10 rounded-full inline"
+          />
+        </div>
+        <textarea
+          className="px-3 py-2 resize-none w-110 2xl:w-150"
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          placeholder="O que está acontecendo?"
+        />
+      </div>
+
+      <div className="flex justify-self-end justify-end w-110 2xl:w-150">
         <button
-          className="btn border-cupid bg-cupid text-white mt-1"
+          className="btn btn-primary text-white mt-1"
           onClick={async () => {
             await dispatch(
               replyTweetThunk({
@@ -30,8 +42,8 @@ export function ReplyTweet({ tweetId, userToken }: Props) {
                 userToken: userToken,
               }),
             );
-            console.log("tweet respondido");
             setText("");
+            onSubmit();
           }}
         >
           Tweetar

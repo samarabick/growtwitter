@@ -8,28 +8,34 @@ interface Props {
 }
 
 export function NewTweet({ onSubmit }: Props) {
+  // Variáveis
   const [text, setText] = useState("");
-
-  const user = useAppSelector((state) => state.user.user);
-  const userToken = user.token;
-  const userId = user.id;
+  const userLogged = useAppSelector((state) => state.user.user);
+  const userToken = userLogged.token;
+  const userId = userLogged.id;
   const dispatch = useAppDispatch();
 
   return (
     <>
-      <div>
-        <img src={user.image} alt="" className="max-w-10 rounded-full inline" />
+      <div className="flex">
+        <div className="mx-2">
+          <img
+            src={userLogged.image}
+            alt=""
+            className="max-w-10 rounded-full inline"
+          />
+        </div>
 
         <textarea
-          className="px-3 py-2 resize-none w-120 2xl:w-160"
+          className="px-3 py-2 resize-none w-110 2xl:w-150"
           value={text}
           onChange={(e) => setText(e.target.value)}
           placeholder="O que está acontecendo?"
         />
       </div>
-      <div className="flex justify-end w-120 2xl:w-160">
+      <div className="flex justify-self-end justify-end w-110 2xl:w-150">
         <button
-          className="btn border-cupid bg-cupid text-white mt-1"
+          className="btn btn-primary text-white mt-1"
           onClick={async () => {
             await dispatch(
               createTweetThunk({

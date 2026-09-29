@@ -28,6 +28,30 @@ body {
   background-color: #fdeef5;
 }
 
+Link {
+  cursor: pointer;
+}
+
+/* Imagem */
+
+img {
+  border-radius: 50%;
+}
+
+.profile-pic {
+  width: 80px;
+}
+
+.mainLayout-profile-pic {
+  width: 30px;
+}
+
+.tweet-profile-pic {
+  width: 40px;
+}
+
+/* Botões */
+
 button {
   cursor: pointer;
 }
@@ -38,9 +62,39 @@ button {
   padding: 8px;
 }
 
-Link {
-  cursor: pointer;
+.btn-primary {
+  background-color: var(--color-cupid);
+  border-color: var(--color-cupid);
 }
+
+.btn-primary:hover {
+  background-color: var(--color-azalea);
+  border-color: var(--color-azalea);
+  transition: 0.2s;
+}
+
+.btn-confirm {
+  border-color: var(--color-pink-500);
+  background-color: var(--color-pink-500);
+  color: white;
+}
+
+.btn-confirm:hover {
+  background-color: var(--color-pink-600);
+  border-color: var(--color-pink-600);
+  transition: 0.2s;
+}
+
+.btn-cancel {
+  border-color: var(--color-gray-400);
+}
+
+.btn-cancel:hover {
+  background-color: var(--color-gray-300);
+  transition: 0.2s;
+}
+
+/* Curtir */
 
 @keyframes heartLike {
   0% {
@@ -58,6 +112,14 @@ Link {
 
 .heart-like {
   animation: heartLike 300ms ease-in-out;
+}
+
+/* Modal  */
+.modal {
+  border: 1px solid var(--color-azalea);
+  border-radius: var(--radius-lg);
+  background-color: var(--color-tututu2);
+  padding: calc(var(--spacing) * 12);
 }
 
 /* Foco normal :focus {

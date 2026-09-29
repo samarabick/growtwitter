@@ -2,7 +2,7 @@ import { Link, Outlet, useLocation } from "react-router-dom";
 import { useAppSelector } from "../store/index";
 import { useLogout } from "../components/Logout";
 import { useState } from "react";
-import { NewTweetModal } from "../components/Tweet/NewTweetModal";
+import { NewTweetModal } from "../components/Tweet/Modais/NewTweetModal";
 import { NewTweet } from "../components/Tweet/NewTweet";
 import {
   HouseIcon,
@@ -90,7 +90,7 @@ export function MainLayout() {
             {/* Botão de novo Tweet */}
             <div className="grid mt-3">
               <button
-                className="btn border-cupid bg-cupid text-white mt-1 "
+                className="btn btn-primary text-white mt-1 "
                 onClick={() => setIsNewTweetModalOpen(true)}
               >
                 Tweetar
@@ -98,14 +98,19 @@ export function MainLayout() {
             </div>
           </div>
 
-          <div className="sm:absolute sm:bottom-10 sm:left-20 md:left-13 btn border-cupid text-cupid">
+          <div className="sm:absolute sm:bottom-10 btn hover:bg-cupid/20 transition duration-200 text-cupid justify-self-center">
             <Menu>
-              <MenuButton>
+              <MenuButton className="flex">
+                <img
+                  src={user.image}
+                  alt=""
+                  className="mainLayout-profile-pic mx-1"
+                />
                 <span>@</span>
                 {user.username}
               </MenuButton>
               <MenuItems anchor="top">
-                <div className="bg-pink-400 rounded-4xl px-2 text-white">
+                <div className="rounded-4xl btn-confirm px-2 text-white">
                   <MenuItem>
                     <button className="block mb-5" onClick={() => logout()}>
                       Sair

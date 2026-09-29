@@ -2,7 +2,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { Feed } from "../../components/Feed";
 import { useEffect, useState } from "react";
-import styled from "styled-components";
 import { fetchProfileFeedThunk } from "../../store/tweet/tweetThunks";
 import {
   followProfileThunk,
@@ -12,11 +11,6 @@ import {
 import { type Profile } from "../../types";
 import { ArrowLeftIcon, DotOutlineIcon } from "@phosphor-icons/react";
 import { UnfollowModal } from "./UnfollowModal";
-
-const ProfilePicture = styled.img`
-  width: 50px;
-  border-radius: 50%;
-`;
 
 export function Profile() {
   const params = useParams();
@@ -99,11 +93,12 @@ export function Profile() {
           {/* Foto perfil + botão de seguir */}
           <div className="flex justify-between">
             {profile.imageUrl != null ? (
-              <ProfilePicture src={profile.imageUrl} alt="" />
+              <img src={profile.imageUrl} alt="" className="profile-pic" />
             ) : (
-              <ProfilePicture
+              <img
                 src="https://voxnews.com.br/wp-content/uploads/2017/04/unnamed.png"
                 alt=""
+                className="profile-pic"
               />
             )}
 
