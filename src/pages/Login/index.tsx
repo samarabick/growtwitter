@@ -3,6 +3,7 @@ import { useAppDispatch } from "../../store/index";
 import { type LoginProps } from "../../store/user/userService";
 import { loadLogin } from "../../store/user/userThunks";
 import { useNavigate } from "react-router-dom";
+import { LoginScreen } from "./LoginScreen";
 
 export interface User {
   username: string;
@@ -19,18 +20,27 @@ export function Login() {
 
   const dispatch = useAppDispatch();
 
-  async function handleLogin({ username, password }: LoginProps) {
-    const result = await dispatch(
-      loadLogin({
-        username: username,
-        password: password,
-      }),
-    );
+  const [isLoading, setIsLoading] = useState(false);
 
-    if (loadLogin.fulfilled.match(result)) {
-      navigate("/home");
+  async function handleLogin({ username, password }: LoginProps) {
+    setIsLoading(true);
+    try {
+      const result = await dispatch(
+        loadLogin({
+          username: username,
+          password: password,
+        }),
+      );
+
+      if (loadLogin.fulfilled.match(result)) {
+        navigate("/home");
+      }
+    } finally {
+      setIsLoading(false);
     }
   }
+
+  console.log(isLoading);
 
   return (
     <>
@@ -53,6 +63,10 @@ export function Login() {
       >
         Entrar
       </button>
+
+      {/* Carregamento  */}
+
+      {isLoading && <LoginScreen type="login" />}
     </>
   );
 }

@@ -2,6 +2,8 @@ import { useState } from "react";
 // import { type CreateTweetProps } from "../../store/tweet/tweetService";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { createTweetThunk } from "../../store/tweet/tweetThunks";
+import { Zoomies } from "ldrs/react";
+import "ldrs/react/Zoomies.css";
 
 interface Props {
   onSubmit: () => void;
@@ -15,8 +17,24 @@ export function NewTweet({ onSubmit }: Props) {
   const userId = userLogged.id;
   const dispatch = useAppDispatch();
 
+  const [isLoading, setIsLoading] = useState(false);
+
   return (
     <>
+      {isLoading ? (
+        <div className="px-3 h-3 justify-center grid">
+          <Zoomies
+            size="450"
+            stroke="4"
+            bgOpacity="0"
+            speed="1.7"
+            color="#0f102e"
+          />
+        </div>
+      ) : (
+        <div className="px-3 h-3 justify-center grid"></div>
+      )}
+
       <div className="flex">
         <div className="mx-2">
           <img
@@ -37,6 +55,7 @@ export function NewTweet({ onSubmit }: Props) {
         <button
           className="btn btn-primary text-white mt-1"
           onClick={async () => {
+            setIsLoading(true);
             await dispatch(
               createTweetThunk({
                 contentTweet: text,
@@ -44,8 +63,10 @@ export function NewTweet({ onSubmit }: Props) {
                 userId: userId,
               }),
             );
+
             setText("");
             onSubmit();
+            setIsLoading(false);
           }}
         >
           Tweetar

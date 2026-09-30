@@ -10,7 +10,8 @@ import {
   UserIcon,
 } from "@phosphor-icons/react";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
-import meowtter from "../assets/meowtter.png";
+import meowtter2 from "../assets/meowtter_2.png";
+import { LoginScreen } from "../pages/Login/LoginScreen";
 
 export function MainLayout() {
   const user = useAppSelector((state) => state.user.user);
@@ -22,7 +23,18 @@ export function MainLayout() {
     setIsNewTweetModalOpen(false);
   }
 
+  const [isLoading, setIsLoading] = useState(false);
   const logout = useLogout();
+
+  function handleLogout() {
+    setIsLoading(true);
+
+    //settimeout para deixar a animação de deslogar acontecer
+    // pois na API não há função para logout
+    setTimeout(() => {
+      logout();
+    }, 600);
+  }
 
   const location = useLocation().pathname;
 
@@ -32,7 +44,7 @@ export function MainLayout() {
         <aside className="sm:h-screen sm:sticky sm:top-0 sm:pl-2 text-xl relative border border-tututu rounded-4xl bg-tututu2 grid">
           <div className="mt-10 px-4">
             <div>
-              <img src={meowtter} alt="" />
+              <img src={meowtter2} alt="" />
             </div>
             {/* Link para Página Inicial  */}
             <div className="pt-2">
@@ -101,7 +113,6 @@ export function MainLayout() {
               </button>
             </div>
           </div>
-
           <div className="sm:absolute sm:bottom-10 hover:bg-cupid/20 transition duration-200 text-cupid justify-self-center btn">
             <Menu>
               <MenuButton className="flex">
@@ -116,7 +127,10 @@ export function MainLayout() {
               <MenuItems anchor="top">
                 <div className="rounded-4xl btn-confirm px-2 text-white">
                   <MenuItem>
-                    <button className="block mb-5" onClick={() => logout()}>
+                    <button
+                      className="block mb-5"
+                      onClick={() => handleLogout()}
+                    >
                       Sair
                     </button>
                   </MenuItem>
@@ -124,7 +138,6 @@ export function MainLayout() {
               </MenuItems>
             </Menu>
           </div>
-
           {/* Modal de novo tweet  */}
           <NewTweetModal
             isNewTweetModalOpen={isNewTweetModalOpen}
@@ -145,6 +158,8 @@ export function MainLayout() {
         <aside className="not-md:hidden md:h-screen md:sticky md:top-0 pt-5 border border-tututu rounded-4xl bg-tututu2">
           <h1>menu lateral</h1>
         </aside>
+        {/* Modal de carregamento logout */}
+        {isLoading && <LoginScreen type="logout" />}
       </div>
     </>
   );

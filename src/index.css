@@ -58,7 +58,7 @@ button {
 
 .btn {
   border-width: 1px;
-  border-radius: 20px;
+  border-radius: var(--radius-3xl);
   padding: 8px;
 }
 
@@ -117,8 +117,14 @@ button {
 /* Modal  */
 .modal {
   border: 1px solid var(--color-azalea);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-3xl);
   background-color: var(--color-tututu2);
+  padding: calc(var(--spacing) * 12);
+}
+
+.modal-login-n-out {
+  border-radius: var(--radius-3xl);
+  background-color: var(--color-tututu);
   padding: calc(var(--spacing) * 12);
 }
 
