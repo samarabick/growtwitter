@@ -80,8 +80,10 @@ export function TweetsFeed({ tweet, userToken, userId, isNotReply }: Props) {
   }
 
   function confirmDeleteModal() {
-    setIsDeleteModalOpen(false);
     handleDelete();
+    setTimeout(() => {
+      setIsDeleteModalOpen(false);
+    }, 1100);
   }
 
   // Modal de Responder
@@ -155,18 +157,17 @@ export function TweetsFeed({ tweet, userToken, userId, isNotReply }: Props) {
           </button>
 
           {/* Excluir */}
-          <button title="Excluir">
-            {tweet.author.id === userId ? (
+
+          {tweet.author.id === userId && (
+            <button title="Excluir">
               <TrashIcon
                 className="size-4.5 inline"
                 onClick={() => setIsDeleteModalOpen(true)}
               >
                 Excluir
               </TrashIcon>
-            ) : (
-              <button hidden></button>
-            )}
-          </button>
+            </button>
+          )}
 
           {/* Modal de confirmação de exclusão  */}
           <div>

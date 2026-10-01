@@ -65,6 +65,7 @@ button {
 .btn-primary {
   background-color: var(--color-cupid);
   border-color: var(--color-cupid);
+  color: white;
 }
 
 .btn-primary:hover {
@@ -92,6 +93,16 @@ button {
 .btn-cancel:hover {
   background-color: var(--color-gray-300);
   transition: 0.2s;
+}
+
+.input-primary {
+  border: 1px solid;
+  border-color: var(--color-azalea);
+  border-radius: var(--radius-3xl);
+}
+
+.input-primary:focus-visible {
+  outline: none;
 }
 
 /* Curtir */
@@ -128,7 +139,8 @@ button {
   padding: calc(var(--spacing) * 12);
 }
 
-/* Foco normal :focus {
-  outline: 1px solid pink;
-  border-radius: 5px;
-} */
+:focus-visible {
+  outline: 1px solid var(--color-azalea);
+  outline-offset: 2px;
+  border-radius: var(--radius-3xl);
+}

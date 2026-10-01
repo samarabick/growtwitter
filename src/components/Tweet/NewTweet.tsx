@@ -51,7 +51,7 @@ export function NewTweet({ onSubmit }: Props) {
           placeholder="O que está acontecendo?"
         />
       </div>
-      <div className="flex justify-self-end justify-end w-110 2xl:w-150">
+      <div className="flex justify-self-end justify-end w-110 2xl:w-150 mt-1">
         <button
           className="btn btn-primary text-white mt-1"
           onClick={async () => {
