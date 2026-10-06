@@ -1,23 +1,21 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { Feed } from "../../components/Feed";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { fetchProfileFeedThunk } from "../../store/tweet/tweetThunks";
-import {
-  followProfileThunk,
-  loadProfileThunk,
-  unfollowProfileThunk,
-} from "../../store/profile/profileThunks";
-import { type Profile } from "../../types";
+import { loadProfileThunk } from "../../store/profile/profileThunks";
+import { type Profile, type UserProfile } from "../../types";
 import { ArrowLeftIcon, DotOutlineIcon } from "@phosphor-icons/react";
-import { UnfollowModal } from "./UnfollowModal";
+import { FollowUnfollow } from "./FollowUnfollow";
+import { loadProfileUserLoggedThunk } from "../../store/user/userThunks";
 
 export function Profile() {
   const params = useParams();
   const profileId = params.id!;
   const userLogged = useAppSelector((state) => state.user.user);
   const navigate = useNavigate();
-  const profile = useAppSelector((state) => state.profile);
+  const profile: UserProfile = useAppSelector((state) => state.profile);
+  const userLoggedProfile = useAppSelector((state) => state.user.profileUser);
 
   // Carregar perfil
   const dispatch = useAppDispatch();
@@ -29,51 +27,21 @@ export function Profile() {
 
   fetchProfileFeedThunk({ userToken: userLogged.token, userId: profileId });
 
+  // Carregar perfil do usuário logado
+  useEffect(() => {
+    dispatch(
+      loadProfileUserLoggedThunk({
+        userId: userLogged.id,
+        userToken: userLogged.token,
+      }),
+    );
+  }, [userLogged.token, userLoggedProfile.following]);
+
   // Variáveis utilizadas no componente
 
   const totalFollowers = profile.followers.length;
   const numFollowing: number = profile.following.length;
   const totalPosts = useAppSelector((state) => state.feed.profile.length);
-
-  const followersArray: Profile[] = profile.followers;
-
-  // Estado do modal
-
-  const [isUnfollowModalOpen, setIsUnfollowModalOpen] = useState(false);
-
-  // Função para fechar unfollow modal
-
-  function closeUnfollowModal() {
-    setIsUnfollowModalOpen(false);
-  }
-
-  async function confirmUnfollowModal() {
-    await dispatch(
-      unfollowProfileThunk({
-        userToken: userLogged.token,
-        userId: profileId,
-      }),
-    );
-    setIsUnfollowModalOpen(false);
-  }
-
-  // Verifica se o usuário já segue
-
-  const userFollow = followersArray.some((item: Profile) => {
-    return item.id === userLogged.id;
-  });
-
-  // Função de seguir/deixar de seguir
-
-  async function handleFollowButton() {
-    if (userFollow) {
-      setIsUnfollowModalOpen(true);
-    } else {
-      await dispatch(
-        followProfileThunk({ userToken: userLogged.token, userId: profileId }),
-      );
-    }
-  }
 
   return (
     <>
@@ -107,24 +75,12 @@ export function Profile() {
             )}
 
             <div className="self-center">
-              {userLogged.id != profile.id && (
-                <div>
-                  {userFollow ? (
-                    <button
-                      className="btn border-cupid text-cupid"
-                      onClick={() => handleFollowButton()}
-                    >
-                      Seguindo
-                    </button>
-                  ) : (
-                    <button
-                      className="btn border-cupid bg-cupid text-white"
-                      onClick={() => handleFollowButton()}
-                    >
-                      Seguir
-                    </button>
-                  )}
-                </div>
+              {userLogged.id !== profile.id && (
+                <FollowUnfollow
+                  profile={profile}
+                  userLogged={userLogged}
+                  userLoggedProfile={userLoggedProfile}
+                />
               )}
             </div>
           </div>
@@ -135,23 +91,18 @@ export function Profile() {
             <p className="text-sm">@{profile.username}</p>
           </div>
           <div className="flex mb-1">
-            <p className="text-sm">
+            <Link to={`/profile/${profileId}/followers`} className="text-sm">
               {totalFollowers}
               <span className="text-gray-400 text-sm"> Seguidores</span>
-            </p>
-            <p className="text-sm mx-2">
+            </Link>
+            <Link
+              to={`/profile/${profileId}/following`}
+              className="text-sm mx-2"
+            >
               {numFollowing}
               <span className="text-gray-400 text-sm"> Seguindo</span>
-            </p>
+            </Link>
           </div>
-        </div>
-        <div>
-          <UnfollowModal
-            isUnfollowModalOpen={isUnfollowModalOpen}
-            closeUnfollowModal={closeUnfollowModal}
-            confirmUnfollowModal={confirmUnfollowModal}
-            profileUsername={profile.username}
-          />
         </div>
       </div>
       <div>

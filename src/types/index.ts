@@ -15,8 +15,8 @@ export type Profile = {
 // User Profile
 
 export type UserProfile = {
-  followers: UserProfile[];
-  following: UserProfile[];
+  followers: Author[];
+  following: Author[];
   id: string;
   imageUrl: string | null;
   name: string;

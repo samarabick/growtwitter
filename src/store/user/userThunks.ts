@@ -1,7 +1,9 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { type LoginProps } from "../user/userService";
 import { login as loginService } from "../user/userService";
-import { getUser } from "./userSlice";
+import { getUser, getUserProfile } from "./userSlice";
+import { getProfile as getProfileService } from "./../profile/profileService";
+import type { GetProfileProps } from "../profile/profileService";
 
 export const loadLogin = createAsyncThunk(
   "login/loadLogin",
@@ -15,5 +17,16 @@ export const loadLogin = createAsyncThunk(
         image: user.authUser.imageUrl,
       }),
     );
+  },
+);
+
+export const loadProfileUserLoggedThunk = createAsyncThunk(
+  "profileUserLogged/loadProfileUserLogged",
+  async ({ userToken, userId }: GetProfileProps, { dispatch }) => {
+    const userLoggedProfile = await getProfileService({
+      userToken: userToken,
+      userId: userId,
+    });
+    dispatch(getUserProfile(userLoggedProfile));
   },
 );
