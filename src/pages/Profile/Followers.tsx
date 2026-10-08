@@ -48,14 +48,7 @@ export function Followers({ type }: Props) {
       <div>
         {listFollowers.length > 0 ? (
           listFollowers.map((profile: Author) => (
-            <CardFollowers
-              id={profile.id}
-              name={profile.name}
-              imageUrl={profile.imageUrl}
-              username={profile.username}
-              createdAt={profile.createdAt}
-              updatedAt={profile.updatedAt}
-            />
+            <CardFollowers profile={profile} />
           ))
         ) : (
           <>

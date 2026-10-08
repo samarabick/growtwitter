@@ -4,10 +4,11 @@ import { Feed } from "../../components/Feed";
 import { useEffect } from "react";
 import { fetchProfileFeedThunk } from "../../store/tweet/tweetThunks";
 import { loadProfileThunk } from "../../store/profile/profileThunks";
-import { type Profile, type UserProfile } from "../../types";
 import { ArrowLeftIcon, DotOutlineIcon } from "@phosphor-icons/react";
 import { FollowUnfollow } from "./FollowUnfollow";
 import { loadProfileUserLoggedThunk } from "../../store/user/userThunks";
+import { FollowYou } from "./FollowYou";
+import type { UserProfile } from "../../types";
 
 export function Profile() {
   const params = useParams();
@@ -84,8 +85,9 @@ export function Profile() {
               )}
             </div>
           </div>
-          <div>
+          <div className="flex">
             <p className="font-bold text-xl">{profile.name}</p>
+            <FollowYou profile={profile} />
           </div>
           <div>
             <p className="text-sm">@{profile.username}</p>

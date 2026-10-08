@@ -36,7 +36,11 @@ export function FollowUnfollow({
       setIsUnfollowModalOpen(true);
     } else {
       await dispatch(
-        followProfileThunk({ userToken: userLogged.token, userId: profile.id }),
+        followProfileThunk({
+          userToken: userLogged.token,
+          userId: profile.id,
+          userLoggedId: userLogged.id,
+        }),
       );
     }
   }
@@ -46,6 +50,7 @@ export function FollowUnfollow({
       unfollowProfileThunk({
         userToken: userLogged.token,
         userId: profile.id,
+        userLoggedId: userLogged.id,
       }),
     );
     setIsUnfollowModalOpen(false);

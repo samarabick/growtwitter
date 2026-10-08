@@ -1,28 +1,16 @@
 import { Link } from "react-router-dom";
 import type { Author } from "../../types/index";
-import { useAppDispatch, useAppSelector } from "../../store";
-import { loadProfileUserLoggedThunk } from "../../store/user/userThunks";
-import { useEffect } from "react";
-import { fetchProfileFeedThunk } from "../../store/tweet/tweetThunks";
+import { useAppSelector } from "../../store";
 import { FollowUnfollow } from "./FollowUnfollow";
+import { FollowYou } from "./FollowYou";
 
-export function CardFollowers(profile: Author) {
+interface Props {
+  profile: Author;
+}
+
+export function CardFollowers({ profile }: Props) {
   const userLogged = useAppSelector((state) => state.user.user);
-
-  const dispatch = useAppDispatch();
-
-  fetchProfileFeedThunk({ userToken: userLogged.token, userId: profile.id });
-
   const userLoggedProfile = useAppSelector((state) => state.user.profileUser);
-
-  useEffect(() => {
-    dispatch(
-      loadProfileUserLoggedThunk({
-        userId: userLogged.id,
-        userToken: userLogged.token,
-      }),
-    );
-  }, [userLogged.token, userLoggedProfile.following]);
 
   return (
     <>
@@ -47,26 +35,33 @@ export function CardFollowers(profile: Author) {
               </Link>
             )}
           </div>
-          <div>
+          <div className="grid">
             <Link
-              className="text-base font-semibold"
+              className="font-semibold self-center"
               to={`/profile/${profile.id}`}
             >
               {profile.name}
             </Link>
-            <Link className="text-base p-1" to={`/profile/${profile.id}`}>
-              {`@${profile.username}`}
-            </Link>
+            <div className="flex">
+              <Link className="self-center" to={`/profile/${profile.id}`}>
+                {`@${profile.username}`}
+              </Link>
+              <div className="">
+                <FollowYou profile={profile} />
+              </div>
+            </div>
           </div>
         </div>
 
         <div className="self-center col-start-3 md:ml-10 2xl:ml-35">
           <div>
-            <FollowUnfollow
-              profile={profile}
-              userLoggedProfile={userLoggedProfile}
-              userLogged={userLogged}
-            />
+            {userLogged.id !== profile.id && (
+              <FollowUnfollow
+                profile={profile}
+                userLoggedProfile={userLoggedProfile}
+                userLogged={userLogged}
+              />
+            )}
           </div>
         </div>
       </div>

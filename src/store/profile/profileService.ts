@@ -17,7 +17,7 @@ export async function getProfile({ userToken, userId }: GetProfileProps) {
     );
     return result.data.data;
   } catch (error) {
-    console.log("loadProfile", error);
+    console.log(error);
   }
 }
 
