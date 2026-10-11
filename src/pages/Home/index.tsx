@@ -5,15 +5,15 @@ import { fetchFollowingFeedThunk } from "../../store/tweet/tweetThunks";
 
 export function Home() {
   const dispatch = useAppDispatch();
-  const userToken = useAppSelector((state) => state.user.user.token);
+  const userLogged = useAppSelector((state) => state.user.user);
 
-  fetchFollowingFeedThunk(userToken);
+  fetchFollowingFeedThunk(userLogged.token);
 
   return (
     <>
       <div>
         <Feed
-          fetchFeed={() => dispatch(fetchFollowingFeedThunk(userToken))}
+          fetchFeed={() => dispatch(fetchFollowingFeedThunk(userLogged.token))}
           type="home"
         />
       </div>

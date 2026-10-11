@@ -47,7 +47,7 @@ export function CardFollowers({ profile }: Props) {
                 {`@${profile.username}`}
               </Link>
               <div className="">
-                <FollowYou profile={profile} />
+                <FollowYou profile={profile.id} />
               </div>
             </div>
           </div>

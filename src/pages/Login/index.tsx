@@ -2,9 +2,10 @@ import { useState } from "react";
 import { useAppDispatch } from "../../store/index";
 import { type LoginProps } from "../../store/user/userService";
 import { loadLogin } from "../../store/user/userThunks";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { LoginScreen } from "./LoginScreen";
 import meowtter2 from "../../assets/meowtter_2.png";
+import toast from "react-hot-toast";
 
 export interface User {
   username: string;
@@ -26,16 +27,17 @@ export function Login() {
   async function handleLogin({ username, password }: LoginProps) {
     setIsLoading(true);
     try {
+      console.log("Submit do login executado");
       const result = await dispatch(
         loadLogin({
           username: username,
           password: password,
         }),
-      );
-
-      if (loadLogin.fulfilled.match(result)) {
-        navigate("/home");
-      }
+      ).unwrap();
+      console.log("Resultado do login:", result);
+      navigate("/home");
+    } catch (error) {
+      toast.error(error as string);
     } finally {
       setIsLoading(false);
     }
@@ -55,7 +57,7 @@ export function Login() {
             />
           </div>
           <div className="grid m-10">
-            <label htmlFor="username">Username</label>
+            <label htmlFor="username">Usuário</label>
             <input
               type="text"
               id="username"
@@ -78,9 +80,12 @@ export function Login() {
                 type="checkbox"
                 id="showPassword"
                 onChange={() => setHiddenPassowrd(!hiddenPassword)}
-                className="mr-1"
+                className="mr-1 accent-azalea"
               />
               <label htmlFor="showPassword">Mostrar senha</label>
+            </div>
+            <div className="justify-self-center">
+              <Link to="/criar-conta">Criar nova conta</Link>
             </div>
             <button
               onClick={() =>

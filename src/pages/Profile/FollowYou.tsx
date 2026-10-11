@@ -2,7 +2,7 @@ import { useAppSelector } from "../../store";
 import type { Author } from "../../types";
 
 interface Props {
-  profile: Author;
+  profile: string;
 }
 
 export function FollowYou({ profile }: Props) {
@@ -11,7 +11,7 @@ export function FollowYou({ profile }: Props) {
   const followersList: Author[] = userLoggedProfile.followers;
 
   const userIsFolloing = followersList.some((follower) => {
-    return follower.id === profile.id;
+    return follower.id === profile;
   });
 
   return (

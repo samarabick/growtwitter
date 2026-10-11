@@ -9,12 +9,14 @@ interface Props {
   isDeleteModalOpen: boolean;
   closeDeleteModal: () => void;
   confirmDeleteModal: () => void;
+  isDeleting: boolean;
 }
 
 export function DeleteTweetModal({
   isDeleteModalOpen,
   closeDeleteModal,
   confirmDeleteModal,
+  isDeleting,
 }: Props) {
   return (
     <>
@@ -33,18 +35,37 @@ export function DeleteTweetModal({
               perfil.
             </Description>
             <div className="flex gap-4">
-              <button
-                className="btn btn-cancel bg-gr"
-                onClick={() => closeDeleteModal()}
-              >
-                Cancelar
-              </button>
-              <button
-                className="btn btn-confirm"
-                onClick={() => confirmDeleteModal()}
-              >
-                Excluir
-              </button>
+              {isDeleting ? (
+                <button
+                  disabled={isDeleting}
+                  className="btn btn-cancel buttondisabled"
+                >
+                  Cancelar
+                </button>
+              ) : (
+                <button
+                  className="btn btn-cancel"
+                  onClick={() => closeDeleteModal()}
+                >
+                  Cancelar
+                </button>
+              )}
+
+              {isDeleting ? (
+                <button
+                  disabled={isDeleting}
+                  className="btn btn-cancel buttondisabled"
+                >
+                  Excluindo
+                </button>
+              ) : (
+                <button
+                  className="btn btn-confirm"
+                  onClick={() => confirmDeleteModal()}
+                >
+                  Excluir
+                </button>
+              )}
             </div>
           </DialogPanel>
         </div>

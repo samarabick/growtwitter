@@ -28,13 +28,11 @@ export function UnfollowModal({
         <div className="fixed inset-0 flex w-screen items-center justify-center p-4 backdrop-blur-[2px] bg-black/1">
           <DialogPanel className="max-w-lg space-y-4 modal">
             <DialogTitle>
-              <p>
-                Deixar de seguir
-                <span className="font-semibold"> @{profileUsername}?</span>
-              </p>
+              Deixar de seguir
+              <span className="font-semibold"> @{profileUsername}?</span>
             </DialogTitle>
             <Description>
-              <p>Os posts dessa pessoa não aparecerão mais na sua timeline.</p>
+              Os posts dessa pessoa não aparecerão mais na sua timeline.
             </Description>
             <div className="flex gap-4">
               <button

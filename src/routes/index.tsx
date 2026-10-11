@@ -5,6 +5,7 @@ import { Profile } from "../pages/Profile/index";
 import { MainLayout } from "../layouts/MainLayout";
 import { Explore } from "../pages/Explore";
 import { Followers } from "../pages/Profile/Followers";
+import { NewAccount } from "../pages/Login/NewAccout";
 
 export const router = createBrowserRouter([
   {
@@ -35,5 +36,9 @@ export const router = createBrowserRouter([
         element: <Explore />,
       },
     ],
+  },
+  {
+    path: "/criar-conta",
+    element: <NewAccount />,
   },
 ]);

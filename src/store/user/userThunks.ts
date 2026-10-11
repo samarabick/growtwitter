@@ -1,22 +1,45 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { type LoginProps } from "../user/userService";
+import {
+  newAccount,
+  type CreateNewAccount,
+  type LoginProps,
+} from "../user/userService";
 import { login as loginService } from "../user/userService";
 import { getUser, getUserProfile } from "./userSlice";
 import { getProfile as getProfileService } from "./../profile/profileService";
 import type { GetProfileProps } from "../profile/profileService";
+import axios from "axios";
 
 export const loadLogin = createAsyncThunk(
   "login/loadLogin",
-  async ({ username, password }: LoginProps, { dispatch }) => {
-    const user = await loginService({ username: username, password: password });
-    dispatch(
-      getUser({
-        username: user.authUser.username,
-        id: user.authUser.id,
-        token: user.authToken,
-        image: user.authUser.imageUrl,
-      }),
-    );
+  async ({ username, password }: LoginProps, { dispatch, rejectWithValue }) => {
+    try {
+      const user = await loginService({
+        username: username,
+        password: password,
+      });
+      dispatch(
+        getUser({
+          username: user.authUser.username,
+          id: user.authUser.id,
+          token: user.authToken,
+          image: user.authUser.imageUrl,
+        }),
+      );
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        if (error.response?.status === 404) {
+          return rejectWithValue("Usuário ou senha inválidos");
+        }
+
+        if (error.response?.status === 401) {
+          return rejectWithValue("Usuário ou senha inválidos");
+        }
+      }
+      return rejectWithValue(
+        "Não foi possível realizar o login. Tente novamente.",
+      );
+    }
   },
 );
 
@@ -28,5 +51,19 @@ export const loadProfileUserLoggedThunk = createAsyncThunk(
       userId: userId,
     });
     dispatch(getUserProfile(userLoggedProfile));
+  },
+);
+
+export const createNewAccount = createAsyncThunk(
+  "createNewAccount",
+  async ({ name, username, password, imageUrl }: CreateNewAccount) => {
+    const creating = await newAccount({
+      name: name,
+      username: username,
+      password: password,
+      imageUrl: imageUrl,
+    });
+
+    return creating;
   },
 );

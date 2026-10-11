@@ -27,6 +27,7 @@ export function TweetsFeed({ tweet, userToken, userId, isNotReply }: Props) {
   const userIdLogged = userLogged.id;
   const likesTotal: number = tweet.likes.length;
   const arrayLikes: Like[] = tweet.likes;
+  const isDeleting = useAppSelector((state) => state.feed.isDeletingTweet);
 
   // Verifica se o usuário logado está na lista de likes do tweet
   const userLiked = arrayLikes.some((item: Like) => {
@@ -72,18 +73,16 @@ export function TweetsFeed({ tweet, userToken, userId, isNotReply }: Props) {
         userToken: userToken,
         userId: userId,
       }),
-    );
+    ).unwrap();
   }
 
   function closeDeleteModal() {
     setIsDeleteModalOpen(false);
   }
 
-  function confirmDeleteModal() {
-    handleDelete();
-    setTimeout(() => {
-      setIsDeleteModalOpen(false);
-    }, 1100);
+  async function confirmDeleteModal() {
+    await handleDelete();
+    setIsDeleteModalOpen(false);
   }
 
   // Modal de Responder
@@ -175,6 +174,7 @@ export function TweetsFeed({ tweet, userToken, userId, isNotReply }: Props) {
               isDeleteModalOpen={isDeleteModalOpen}
               closeDeleteModal={closeDeleteModal}
               confirmDeleteModal={confirmDeleteModal}
+              isDeleting={isDeleting}
             />
           </div>
         </div>

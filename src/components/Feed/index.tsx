@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { type Tweet } from "../../types/index";
 import { TweetsFeed } from "../Tweet/TweetFeed";
 import { useNavigate } from "react-router-dom";
+import { Zoomies } from "ldrs/react";
 
 interface Props {
   fetchFeed: () => Promise<unknown>;
@@ -15,6 +16,7 @@ export function Feed({ fetchFeed, type }: Props) {
   const userToken = userLogged.token;
   const userId = userLogged.id;
   const navigate = useNavigate();
+  const feedState = useAppSelector((state) => state.feed.isFeedLoading);
 
   // Indica se deve chamar home ou profile da store
   const tweetsList = useAppSelector((state) => {
@@ -25,9 +27,14 @@ export function Feed({ fetchFeed, type }: Props) {
     }
   });
 
+  console.log(
+    "Estado completo do feed:",
+    useAppSelector((state) => state.feed),
+  );
+
   useEffect(() => {
     fetchFeed();
-  }, [userToken, tweetsList]);
+  }, [userToken]);
 
   // Redireciona para tela de login quando o userToken for vazio
   useEffect(() => {
@@ -39,7 +46,17 @@ export function Feed({ fetchFeed, type }: Props) {
   return (
     <>
       <div>
-        {tweetsList ? (
+        {feedState ? (
+          <div className="px-3 h-3 justify-center grid">
+            <Zoomies
+              size="450"
+              stroke="4"
+              bgOpacity="0"
+              speed="1.7"
+              color="#0f102e"
+            />
+          </div>
+        ) : tweetsList.length > 0 ? (
           tweetsList.map((tweet: Tweet) => (
             <>
               <div className="shadow-b-md border-t border-tututu ">

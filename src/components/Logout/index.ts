@@ -1,12 +1,12 @@
-import { useAppDispatch } from "../../store";
-import { getUser } from "../../store/user/userSlice";
+import { persistor, useAppDispatch } from "../../store";
+import { getUser, getUserProfile } from "../../store/user/userSlice";
 import { useNavigate } from "react-router-dom";
 
 export function useLogout() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  function logout() {
+  async function logout() {
     dispatch(
       getUser({
         username: "",
@@ -14,6 +14,17 @@ export function useLogout() {
         token: "",
       }),
     );
+    dispatch(
+      getUserProfile({
+        followers: [],
+        following: [],
+        id: "",
+        imageUrl: "",
+        name: "",
+        username: "",
+      }),
+    );
+    await persistor.purge();
 
     navigate("/");
   }

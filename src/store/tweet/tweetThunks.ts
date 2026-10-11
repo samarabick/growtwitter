@@ -18,7 +18,7 @@ export const fetchFollowingFeedThunk = createAsyncThunk(
   "tweet/fetchTweetsFeed",
   async (userToken: string, { dispatch }) => {
     const tweets = await getFollowingFeedService(userToken);
-
+    console.log("Retorno do service:", tweets);
     dispatch(getHomeFeedSlice(tweets));
   },
 );

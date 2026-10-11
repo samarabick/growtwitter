@@ -24,7 +24,7 @@ export function Profile() {
     dispatch(
       loadProfileThunk({ userToken: userLogged.token, userId: profileId }),
     );
-  }, [profileId, profile.followers]);
+  }, [profileId]);
 
   fetchProfileFeedThunk({ userToken: userLogged.token, userId: profileId });
 
@@ -87,7 +87,7 @@ export function Profile() {
           </div>
           <div className="flex">
             <p className="font-bold text-xl">{profile.name}</p>
-            <FollowYou profile={profile} />
+            <FollowYou profile={profile.id} />
           </div>
           <div>
             <p className="text-sm">@{profile.username}</p>
