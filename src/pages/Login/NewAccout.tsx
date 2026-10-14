@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 import { type CreateNewAccount } from "../../store/user/userService";
 import { createNewAccount } from "../../store/user/userThunks";
 import { useAppDispatch } from "../../store";
+import { LoginScreen } from "./LoginScreen";
+import toast from "react-hot-toast";
 interface NewUser {
   name: string;
   username: string;
@@ -13,11 +15,15 @@ interface NewUser {
 
 export function NewAccount() {
   const dispatch = useAppDispatch();
+  const [isLoading, setIsLoading] = useState(false);
   const [newUser, setNewUser] = useState<NewUser>({
     name: "",
     username: "",
     password: "",
   });
+
+  const [sentForm, setSentForm] = useState(false);
+  const [usingUsername, setUsingUsername] = useState(false);
 
   async function handleCreate({
     name,
@@ -26,17 +32,23 @@ export function NewAccount() {
     imageUrl,
   }: CreateNewAccount) {
     try {
-      const result = await dispatch(
+      setIsLoading(true);
+      setSentForm(true);
+      await dispatch(
         createNewAccount({
           name: name,
           username: username,
           password: password,
           imageUrl: imageUrl,
         }),
-      );
-      console.log(result);
+      ).unwrap();
     } catch (error) {
-      console.log(error);
+      toast.error(error as string);
+      if (error === "Nome de usuário já está em uso") {
+        setUsingUsername(true);
+      }
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -57,40 +69,86 @@ export function NewAccount() {
           </h2>
           <div className="grid mx-10 my-1">
             <label htmlFor="name">Nome</label>
+
             <input
               type="text"
+              required
+              minLength={3}
               id="name"
               value={newUser?.name}
               onChange={(e) => setNewUser({ ...newUser, name: e.target.value })}
               placeholder="Nome"
-              className="p-1 pl-2 input-primary"
+              className={
+                sentForm
+                  ? newUser.name.length < 3
+                    ? "p-1 pl-2 input-error"
+                    : "p-1 pl-2 input-primary"
+                  : "p-1 pl-2 input-primary"
+              }
             />
+            {sentForm && newUser.name.length < 3 && (
+              <span className="text-sm text-[#ff0062]">
+                *Digite pelo menos 3 caracteres
+              </span>
+            )}
           </div>
           <div className="grid mx-10 my-1">
             <label htmlFor="username">Usuário</label>
             <input
               type="text"
+              required
+              minLength={3}
               id="username"
               value={newUser?.username}
-              onChange={(e) =>
-                setNewUser({ ...newUser, username: e.target.value })
-              }
+              onChange={(e) => {
+                setNewUser({ ...newUser, username: e.target.value });
+                setUsingUsername(false);
+              }}
               placeholder="Usuário"
-              className="p-1 pl-2 input-primary"
+              className={
+                sentForm
+                  ? newUser.username.length < 3
+                    ? "p-1 pl-2 input-error"
+                    : "p-1 pl-2 input-primary"
+                  : "p-1 pl-2 input-primary"
+              }
             />
+            {sentForm && newUser.username.length < 3 && (
+              <span className="text-sm text-[#ff0062]">
+                *Digite pelo menos 3 caracteres
+              </span>
+            )}
+            {sentForm && usingUsername && (
+              <span className="text-sm text-[#ff0062]">
+                *Usuário já está em uso
+              </span>
+            )}
           </div>
           <div className="grid mx-10 my-1">
             <label htmlFor="password">Senha</label>
             <input
               type="text"
+              required
+              minLength={5}
               id="password"
               value={newUser?.password}
               onChange={(e) =>
                 setNewUser({ ...newUser, password: e.target.value })
               }
               placeholder="Senha"
-              className="p-1 pl-2 input-primary"
+              className={
+                sentForm
+                  ? newUser.password.length < 5
+                    ? "p-1 pl-2 input-error"
+                    : "p-1 pl-2 input-primary"
+                  : "p-1 pl-2 input-primary"
+              }
             />
+            {sentForm && newUser.password.length < 5 && (
+              <span className="text-sm text-[#ff0062]">
+                *Digite pelo menos 5 caracteres
+              </span>
+            )}
           </div>
           <div className="grid mx-10 my-1">
             <label htmlFor="image">Foto de Perfil</label>
@@ -122,10 +180,13 @@ export function NewAccount() {
           </div>
 
           <div className="grid mx-10 my-1 justify-self-center">
-            <Link to="/">Voltar ao login</Link>
+            <Link to="/" className="link">
+              Voltar ao login
+            </Link>
           </div>
         </div>
       </div>
+      {isLoading && <LoginScreen type="newAccount" />}
     </>
   );
 }

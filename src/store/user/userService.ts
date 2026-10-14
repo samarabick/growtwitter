@@ -44,5 +44,6 @@ export async function newAccount({
     return result.data.data;
   } catch (error) {
     console.log(error);
+    throw error;
   }
 }

@@ -27,11 +27,6 @@ export function Feed({ fetchFeed, type }: Props) {
     }
   });
 
-  console.log(
-    "Estado completo do feed:",
-    useAppSelector((state) => state.feed),
-  );
-
   useEffect(() => {
     fetchFeed();
   }, [userToken]);

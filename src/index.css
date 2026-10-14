@@ -104,6 +104,11 @@ button {
   transition: none;
 }
 
+.link:hover {
+  text-shadow: 0px 0px 5px var(--color-azalea);
+  color: var(--color-azalea);
+}
+
 .input-primary {
   border: 1px solid;
   background-color: var(--color-tutu);
@@ -114,6 +119,19 @@ button {
 .input-primary:focus-visible {
   outline: none;
   box-shadow: 0px 0px 5px 1px var(--color-azalea);
+}
+
+.input-error {
+  border: 1px solid;
+  background-color: var(--color-tutu);
+  color: #ff0062;
+  border-radius: var(--radius-3xl);
+  border-color: #ff0062;
+}
+
+.input-error:focus-visible {
+  box-shadow: 0px 0px 5px 1px #ff0062;
+  outline: none;
 }
 
 /* Curtir */

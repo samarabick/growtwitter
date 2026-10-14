@@ -27,14 +27,13 @@ export function Login() {
   async function handleLogin({ username, password }: LoginProps) {
     setIsLoading(true);
     try {
-      console.log("Submit do login executado");
-      const result = await dispatch(
+      await dispatch(
         loadLogin({
           username: username,
           password: password,
         }),
       ).unwrap();
-      console.log("Resultado do login:", result);
+
       navigate("/home");
     } catch (error) {
       toast.error(error as string);
@@ -85,7 +84,9 @@ export function Login() {
               <label htmlFor="showPassword">Mostrar senha</label>
             </div>
             <div className="justify-self-center">
-              <Link to="/criar-conta">Criar nova conta</Link>
+              <Link to="/criar-conta" className="link">
+                Criar nova conta
+              </Link>
             </div>
             <button
               onClick={() =>

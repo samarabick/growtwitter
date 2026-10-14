@@ -13,13 +13,20 @@ import { type ReplyTweetProps } from "./tweetService";
 import toast from "react-hot-toast";
 import { getHomeFeed as getHomeFeedSlice } from "./tweetSlice";
 import { getProfileFeed as getProfileFeedSlice } from "./tweetSlice";
+import axios from "axios";
 
 export const fetchFollowingFeedThunk = createAsyncThunk(
   "tweet/fetchTweetsFeed",
-  async (userToken: string, { dispatch }) => {
-    const tweets = await getFollowingFeedService(userToken);
-    console.log("Retorno do service:", tweets);
-    dispatch(getHomeFeedSlice(tweets));
+  async (userToken: string, { dispatch, rejectWithValue }) => {
+    try {
+      const tweets = await getFollowingFeedService(userToken);
+
+      dispatch(getHomeFeedSlice(tweets));
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        return rejectWithValue("Não foi possível buscar tweets");
+      }
+    }
   },
 );
 

@@ -25,6 +25,10 @@ export function LoginScreen({ type }: Props) {
               <p className="absolute justify-self-center bottom-20 text-azalea">
                 Entrando...
               </p>
+            ) : type === "newAccount" ? (
+              <p className="absolute justify-self-center bottom-20 text-azalea">
+                Criando conta...
+              </p>
             ) : (
               <p className="absolute justify-self-center bottom-20 text-azalea">
                 Saindo...

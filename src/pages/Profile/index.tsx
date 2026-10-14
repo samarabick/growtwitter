@@ -18,7 +18,7 @@ export function Profile() {
   const profile: UserProfile = useAppSelector((state) => state.profile);
   const userLoggedProfile = useAppSelector((state) => state.user.profileUser);
 
-  // Carregar perfil
+  // Carregar perfil exibido
   const dispatch = useAppDispatch();
   useEffect(() => {
     dispatch(

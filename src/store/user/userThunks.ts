@@ -56,14 +56,31 @@ export const loadProfileUserLoggedThunk = createAsyncThunk(
 
 export const createNewAccount = createAsyncThunk(
   "createNewAccount",
-  async ({ name, username, password, imageUrl }: CreateNewAccount) => {
-    const creating = await newAccount({
-      name: name,
-      username: username,
-      password: password,
-      imageUrl: imageUrl,
-    });
+  async (
+    { name, username, password, imageUrl }: CreateNewAccount,
+    { rejectWithValue },
+  ) => {
+    try {
+      const creating = await newAccount({
+        name: name,
+        username: username,
+        password: password,
+        imageUrl: imageUrl,
+      });
+      return creating;
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        if (error.response?.status === 404) {
+          return rejectWithValue("Verifique os campos digitados");
+        }
 
-    return creating;
+        if (error.response?.status === 409) {
+          return rejectWithValue("Nome de usuário já está em uso");
+        }
+      }
+      return rejectWithValue(
+        "Não foi possível criar a conta. Tente novamente.",
+      );
+    }
   },
 );
