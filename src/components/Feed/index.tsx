@@ -17,6 +17,7 @@ export function Feed({ fetchFeed, type }: Props) {
   const userId = userLogged.id;
   const navigate = useNavigate();
   const feedState = useAppSelector((state) => state.feed.isFeedLoading);
+  // const likeState = useAppSelector((state) => state.feed.isLiked);
 
   // Indica se deve chamar home ou profile da store
   const tweetsList = useAppSelector((state) => {
@@ -36,7 +37,7 @@ export function Feed({ fetchFeed, type }: Props) {
     if (userToken === "") {
       navigate("/");
     }
-  }, [userToken, navigate]);
+  }, [userToken]);
 
   return (
     <>

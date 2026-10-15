@@ -9,6 +9,7 @@ import { FollowUnfollow } from "./FollowUnfollow";
 import { loadProfileUserLoggedThunk } from "../../store/user/userThunks";
 import { FollowYou } from "./FollowYou";
 import type { UserProfile } from "../../types";
+import toast from "react-hot-toast";
 
 export function Profile() {
   const params = useParams();
@@ -17,13 +18,24 @@ export function Profile() {
   const navigate = useNavigate();
   const profile: UserProfile = useAppSelector((state) => state.profile);
   const userLoggedProfile = useAppSelector((state) => state.user.profileUser);
+  const isProfileLoading = useAppSelector(
+    (state) => state.profile.isProfileLoading,
+  );
 
   // Carregar perfil exibido
   const dispatch = useAppDispatch();
   useEffect(() => {
-    dispatch(
-      loadProfileThunk({ userToken: userLogged.token, userId: profileId }),
-    );
+    async function loadProfile() {
+      try {
+        await dispatch(
+          loadProfileThunk({ userToken: userLogged.token, userId: profileId }),
+        ).unwrap();
+      } catch (error) {
+        toast.error(error as string);
+        navigate("/home");
+      }
+    }
+    loadProfile();
   }, [profileId]);
 
   fetchProfileFeedThunk({ userToken: userLogged.token, userId: profileId });
@@ -46,67 +58,125 @@ export function Profile() {
 
   return (
     <>
-      <div className="flex py-3 px-3 text-md bg-tututu2/80 rounded-t-4xl backdrop-blur-md">
-        <button onClick={() => navigate("/home")}>
-          <ArrowLeftIcon weight="light" className="text-lg" />
-        </button>
-        <p>{profile.name}</p>
-        <DotOutlineIcon weight="fill" className="self-center text-gray-500" />
-        <div className="flex text-gray-500">
-          <span>{totalPosts}</span>
-          <p className="  ml-1">Posts</p>
-        </div>
-      </div>
-      <div>
-        <div className="px-5">
-          {/* Foto perfil + botão de seguir */}
-          <div className="flex justify-between">
-            {profile.imageUrl != null ? (
-              <img
-                src={profile.imageUrl}
-                alt=""
-                className="profile-pic img-profile"
-              />
-            ) : (
-              <img
-                src="https://voxnews.com.br/wp-content/uploads/2017/04/unnamed.png"
-                alt=""
-                className="profile-pic img-profile"
-              />
-            )}
-
-            <div className="self-center">
-              {userLogged.id !== profile.id && (
-                <FollowUnfollow
-                  profile={profile}
-                  userLogged={userLogged}
-                  userLoggedProfile={userLoggedProfile}
-                />
-              )}
+      {isProfileLoading ? (
+        <div>
+          <div className="flex py-3 px-3 text-md bg-tututu2/80 rounded-t-4xl backdrop-blur-md">
+            <button onClick={() => navigate("/home")}>
+              <ArrowLeftIcon weight="light" className="text-lg" />
+            </button>
+            <p className="blur-xs">Carregando</p>
+            <DotOutlineIcon
+              weight="fill"
+              className="self-center text-gray-500"
+            />
+            <div className="flex text-gray-500">
+              <span className="blur-xs">10</span>
+              <p className="ml-1 blur-xs">Posts</p>
             </div>
           </div>
-          <div className="flex">
-            <p className="font-bold text-xl">{profile.name}</p>
-            <FollowYou profile={profile.id} />
+          <div className="px-5">
+            <img
+              src="https://voxnews.com.br/wp-content/uploads/2017/04/unnamed.png"
+              alt=""
+              className="profile-pic img-profile blur-xs"
+            />
           </div>
-          <div>
-            <p className="text-sm">@{profile.username}</p>
+          <div className="px-5 blur-xs">
+            <div className="flex ">
+              <p className="font-bold text-xl">Carregando</p>
+            </div>
+            <div>
+              <p className="text-sm">@carregando</p>
+            </div>
           </div>
-          <div className="flex mb-1">
-            <Link to={`/profile/${profileId}/followers`} className="text-sm">
-              {totalFollowers}
-              <span className="text-gray-400 text-sm"> Seguidores</span>
-            </Link>
-            <Link
-              to={`/profile/${profileId}/following`}
-              className="text-sm mx-2"
-            >
-              {numFollowing}
-              <span className="text-gray-400 text-sm"> Seguindo</span>
-            </Link>
+          <div className="px-5 blur-xs">
+            <div className="flex mb-1">
+              <Link to={`/profile/${profileId}/followers`} className="text-sm">
+                {totalFollowers}
+                <span className="text-gray-400 text-sm"> Seguidores</span>
+              </Link>
+              <Link
+                to={`/profile/${profileId}/following`}
+                className="text-sm mx-2"
+              >
+                {numFollowing}
+                <span className="text-gray-400 text-sm"> Seguindo</span>
+              </Link>
+            </div>
           </div>
         </div>
-      </div>
+      ) : (
+        <div>
+          <div className="flex py-3 px-3 text-md bg-tututu2/80 rounded-t-4xl backdrop-blur-md">
+            <button onClick={() => navigate("/home")}>
+              <ArrowLeftIcon weight="light" className="text-lg" />
+            </button>
+            <p>{profile.name}</p>
+            <DotOutlineIcon
+              weight="fill"
+              className="self-center text-gray-500"
+            />
+            <div className="flex text-gray-500">
+              <span>{totalPosts}</span>
+              <p className="  ml-1">Posts</p>
+            </div>
+          </div>
+          <div>
+            <div className="px-5">
+              {/* Foto perfil + botão de seguir */}
+              <div className="flex justify-between">
+                {profile.imageUrl != null ? (
+                  <img
+                    src={profile.imageUrl}
+                    alt=""
+                    className="profile-pic img-profile"
+                  />
+                ) : (
+                  <img
+                    src="https://voxnews.com.br/wp-content/uploads/2017/04/unnamed.png"
+                    alt=""
+                    className="profile-pic img-profile"
+                  />
+                )}
+
+                <div className="self-center">
+                  {userLogged.id !== profile.id && (
+                    <FollowUnfollow
+                      profile={profile}
+                      userLogged={userLogged}
+                      userLoggedProfile={userLoggedProfile}
+                    />
+                  )}
+                </div>
+              </div>
+              <div className="flex">
+                <p className="font-bold text-xl">{profile.name}</p>
+                <FollowYou profile={profile.id} />
+              </div>
+              <div>
+                <p className="text-sm">@{profile.username}</p>
+              </div>
+              <div className="flex mb-1">
+                <Link
+                  to={`/profile/${profileId}/followers`}
+                  className="text-sm"
+                >
+                  {totalFollowers}
+                  <span className="text-gray-400 text-sm"> Seguidores</span>
+                </Link>
+                <Link
+                  to={`/profile/${profileId}/following`}
+                  className="text-sm mx-2"
+                >
+                  {numFollowing}
+                  <span className="text-gray-400 text-sm"> Seguindo</span>
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div>
         <Feed
           fetchFeed={() =>

@@ -18,6 +18,7 @@ export async function getProfile({ userToken, userId }: GetProfileProps) {
     return result.data.data;
   } catch (error) {
     console.log(error);
+    throw error;
   }
 }
 
@@ -37,6 +38,7 @@ export async function followProfile({ userToken, userId }: GetProfileProps) {
     console.log(result);
   } catch (error) {
     console.log(error);
+    throw error;
   }
 }
 
@@ -56,5 +58,6 @@ export async function unfollowProfile({ userToken, userId }: GetProfileProps) {
     console.log(result);
   } catch (error) {
     console.log(error);
+    throw error;
   }
 }

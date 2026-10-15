@@ -6,6 +6,7 @@ import {
   followProfileThunk,
   unfollowProfileThunk,
 } from "../../store/profile/profileThunks";
+import toast from "react-hot-toast";
 
 interface Props {
   profile: Profile;
@@ -35,25 +36,34 @@ export function FollowUnfollow({
     if (userFollow) {
       setIsUnfollowModalOpen(true);
     } else {
+      try {
+        await dispatch(
+          followProfileThunk({
+            userToken: userLogged.token,
+            userId: profile.id,
+            userLoggedId: userLogged.id,
+          }),
+        );
+      } catch (error) {
+        toast.error(error as string);
+      }
+    }
+  }
+
+  async function confirmUnfollowModal() {
+    try {
       await dispatch(
-        followProfileThunk({
+        unfollowProfileThunk({
           userToken: userLogged.token,
           userId: profile.id,
           userLoggedId: userLogged.id,
         }),
       );
+    } catch (error) {
+      toast.error(error as string);
+    } finally {
+      setIsUnfollowModalOpen(false);
     }
-  }
-
-  async function confirmUnfollowModal() {
-    await dispatch(
-      unfollowProfileThunk({
-        userToken: userLogged.token,
-        userId: profile.id,
-        userLoggedId: userLogged.id,
-      }),
-    );
-    setIsUnfollowModalOpen(false);
   }
 
   return (

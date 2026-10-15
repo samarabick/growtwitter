@@ -1,13 +1,25 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { type UserProfile } from "../../types/index";
+import { type Author } from "../../types/index";
+import { loadProfileThunk } from "./profileThunks";
 
-const initialState: UserProfile = {
+type ProfileType = {
+  followers: Author[];
+  following: Author[];
+  id: string;
+  imageUrl: string;
+  name: string;
+  username: string;
+  isProfileLoading: boolean;
+};
+
+const initialState: ProfileType = {
   followers: [],
   following: [],
   id: "",
   imageUrl: "",
   name: "",
   username: "",
+  isProfileLoading: false,
 };
 
 const profileSlice = createSlice({
@@ -22,6 +34,19 @@ const profileSlice = createSlice({
       state.name = action.payload.name;
       state.username = action.payload.username;
     },
+  },
+
+  extraReducers: (builder) => {
+    builder
+      .addCase(loadProfileThunk.pending, (state) => {
+        state.isProfileLoading = true;
+      })
+      .addCase(loadProfileThunk.fulfilled, (state) => {
+        state.isProfileLoading = false;
+      })
+      .addCase(loadProfileThunk.rejected, (state) => {
+        state.isProfileLoading = false;
+      });
   },
 });
 

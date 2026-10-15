@@ -5,6 +5,7 @@ import { useAppDispatch, useAppSelector } from "../../store";
 import { useState } from "react";
 import {
   deleteTweetThunk,
+  fetchFollowingFeedThunk,
   likeTweetThunk,
   unlikeTweetThunk,
 } from "../../store/tweet/tweetThunks";
@@ -45,6 +46,7 @@ export function TweetsFeed({ tweet, userToken, userId, isNotReply }: Props) {
           userId: userIdLogged,
         }),
       );
+      await dispatch(fetchFollowingFeedThunk(userLogged.token));
     } else {
       await dispatch(
         likeTweetThunk({
@@ -53,6 +55,7 @@ export function TweetsFeed({ tweet, userToken, userId, isNotReply }: Props) {
           userId: userIdLogged,
         }),
       );
+      await dispatch(fetchFollowingFeedThunk(userLogged.token));
     }
   }
 

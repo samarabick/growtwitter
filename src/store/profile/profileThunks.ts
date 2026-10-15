@@ -7,15 +7,25 @@ import {
 } from "./profileService";
 import { getProfile as getProfileSlice } from "./profileSlice";
 import { loadProfileUserLoggedThunk } from "../user/userThunks";
+import axios from "axios";
 
 export const loadProfileThunk = createAsyncThunk(
   "profile/loadProfile",
-  async ({ userToken, userId }: GetProfileProps, { dispatch }) => {
-    const profile = await getProfileService({
-      userToken: userToken,
-      userId: userId,
-    });
-    dispatch(getProfileSlice(profile));
+  async (
+    { userToken, userId }: GetProfileProps,
+    { dispatch, rejectWithValue },
+  ) => {
+    try {
+      const profile = await getProfileService({
+        userToken: userToken,
+        userId: userId,
+      });
+      dispatch(getProfileSlice(profile));
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        return rejectWithValue("Não foi possível carregar o perfil");
+      }
+    }
   },
 );
 
@@ -29,19 +39,26 @@ export const followProfileThunk = createAsyncThunk(
   "profile/followProfile",
   async (
     { userToken, userId, userLoggedId }: FollowUnfollowProps,
-    { dispatch },
+    { dispatch, rejectWithValue },
   ) => {
-    const result = await followProfileService({
-      userToken: userToken,
-      userId: userId,
-    });
-    dispatch(
-      loadProfileUserLoggedThunk({
-        userId: userLoggedId,
+    try {
+      const result = await followProfileService({
         userToken: userToken,
-      }),
-    );
-    return result;
+        userId: userId,
+      });
+      dispatch(
+        loadProfileUserLoggedThunk({
+          userId: userLoggedId,
+          userToken: userToken,
+        }),
+      );
+      return result;
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        dispatch(loadProfileThunk({ userId: userId, userToken: userToken }));
+        return rejectWithValue("Não foi possível seguir. Tente novamente.");
+      }
+    }
   },
 );
 
@@ -49,18 +66,27 @@ export const unfollowProfileThunk = createAsyncThunk(
   "profile/unfollowProfile",
   async (
     { userToken, userId, userLoggedId }: FollowUnfollowProps,
-    { dispatch },
+    { dispatch, rejectWithValue },
   ) => {
-    const result = await unfollowProfileService({
-      userToken: userToken,
-      userId: userId,
-    });
-    dispatch(
-      loadProfileUserLoggedThunk({
-        userId: userLoggedId,
+    try {
+      const result = await unfollowProfileService({
         userToken: userToken,
-      }),
-    );
-    return result;
+        userId: userId,
+      });
+      dispatch(
+        loadProfileUserLoggedThunk({
+          userId: userLoggedId,
+          userToken: userToken,
+        }),
+      );
+      return result;
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        dispatch(loadProfileThunk({ userId: userId, userToken: userToken }));
+        return rejectWithValue(
+          "Não foi possível deixar de seguir. Tente novamente.",
+        );
+      }
+    }
   },
 );
