@@ -6,6 +6,7 @@ import { createNewAccount } from "../../store/user/userThunks";
 import { useAppDispatch } from "../../store";
 import { LoginScreen } from "./LoginScreen";
 import toast from "react-hot-toast";
+import { Welcome } from "./Welcome";
 interface NewUser {
   name: string;
   username: string;
@@ -187,6 +188,7 @@ export function NewAccount() {
         </div>
       </div>
       {isLoading && <LoginScreen type="newAccount" />}
+      <Welcome />
     </>
   );
 }
