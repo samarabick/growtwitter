@@ -1,5 +1,6 @@
 import { TailChase } from "ldrs/react";
 import "ldrs/react/TailChase.css";
+
 import logo from "../../assets/logo_meowtter.png";
 
 interface Props {
