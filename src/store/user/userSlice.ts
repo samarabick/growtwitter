@@ -1,9 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { type UserProfile, type User } from "../../types/index";
+import { createNewAccount } from "./userThunks";
 
 type InitialState = {
   user: User;
   profileUser: UserProfile;
+  isWelcomeModal: boolean;
 };
 
 const initialState: InitialState = {
@@ -21,6 +23,7 @@ const initialState: InitialState = {
     name: "",
     username: "",
   },
+  isWelcomeModal: false,
 };
 
 const userSlice = createSlice({
@@ -41,10 +44,20 @@ const userSlice = createSlice({
       state.profileUser.name = action.payload.name;
       state.profileUser.username = action.payload.username;
     },
+    closeWelcomeModal: (state) => {
+      state.isWelcomeModal = false;
+    },
+  },
+
+  extraReducers: (builder) => {
+    builder.addCase(createNewAccount.fulfilled, (state) => {
+      state.isWelcomeModal = true;
+    });
   },
 });
 
 export const { getUser } = userSlice.actions;
 export const { getUserProfile } = userSlice.actions;
+export const { closeWelcomeModal } = userSlice.actions;
 
 export default userSlice.reducer;

@@ -58,7 +58,7 @@ export const createNewAccount = createAsyncThunk(
   "createNewAccount",
   async (
     { name, username, password, imageUrl }: CreateNewAccount,
-    { rejectWithValue },
+    { rejectWithValue, dispatch },
   ) => {
     try {
       const creating = await newAccount({
@@ -67,6 +67,7 @@ export const createNewAccount = createAsyncThunk(
         password: password,
         imageUrl: imageUrl,
       });
+      dispatch(loadLogin({ username: username, password: password }));
       return creating;
     } catch (error) {
       if (axios.isAxiosError(error)) {

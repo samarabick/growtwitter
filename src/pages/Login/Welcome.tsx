@@ -8,8 +8,12 @@ import {
 import logo from "../../assets/logo_meowtter.png";
 import mask from "../../assets/mask-logo-animation.png";
 import { Link } from "react-router-dom";
+import { useAppDispatch } from "../../store";
+import { closeWelcomeModal } from "../../store/user/userSlice";
 
 export function Welcome() {
+  const dispatch = useAppDispatch();
+
   return (
     <div className="fixed inset-0 grid place-items-center page-fade">
       <div className="fixed inset-0 h-screen w-screen backdrop-blur-[2px] grid">
@@ -89,8 +93,9 @@ export function Welcome() {
             </div>
             <div className="grid mx-10 my-1 justify-self-center absolute bottom-10">
               <Link
-                to="/"
+                to="/home"
                 className="link flex items-center justify-center m-1 text-xl"
+                onClick={() => dispatch(closeWelcomeModal())}
               >
                 Avançar
                 <ArrowRightIcon />

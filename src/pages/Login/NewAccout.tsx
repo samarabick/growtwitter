@@ -1,11 +1,13 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import meowtter2 from "../../assets/meowtter_2.png";
 import { Link } from "react-router-dom";
 import { type CreateNewAccount } from "../../store/user/userService";
 import { createNewAccount } from "../../store/user/userThunks";
-import { useAppDispatch } from "../../store";
+import { useAppDispatch, useAppSelector } from "../../store";
 import { LoginScreen } from "./LoginScreen";
 import toast from "react-hot-toast";
+import { Welcome } from "./Welcome";
+import { followProfileThunk } from "../../store/profile/profileThunks";
 interface NewUser {
   name: string;
   username: string;
@@ -24,6 +26,8 @@ export function NewAccount() {
 
   const [sentForm, setSentForm] = useState(false);
   const [usingUsername, setUsingUsername] = useState(false);
+
+  const isWelcomeModal = useAppSelector((state) => state.user.isWelcomeModal);
 
   async function handleCreate({
     name,
@@ -51,6 +55,21 @@ export function NewAccount() {
       setIsLoading(false);
     }
   }
+
+  const userCreated = useAppSelector((state) => state.user.user);
+
+  useEffect(() => {
+    async function followSamara() {
+      await dispatch(
+        followProfileThunk({
+          userToken: userCreated.token,
+          userId: "5323bed9-6289-41c3-9e28-f03213bbdeeb",
+          userLoggedId: userCreated.id,
+        }),
+      );
+    }
+    followSamara();
+  }, [userCreated]);
 
   return (
     <>
@@ -187,6 +206,7 @@ export function NewAccount() {
         </div>
       </div>
       {isLoading && <LoginScreen type="newAccount" />}
+      <div>{isWelcomeModal && <Welcome />}</div>
     </>
   );
 }
