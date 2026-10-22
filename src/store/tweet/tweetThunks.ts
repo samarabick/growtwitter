@@ -8,16 +8,24 @@ import {
   unlikeTweet as unlikeTweetService,
   replyTweet as replyTweetService,
 } from "./tweetService";
-import { type getProfileFeedProps } from "./tweetService";
+// import { type getProfileFeedProps } from "./tweetService";
 import { type ReplyTweetProps } from "./tweetService";
 import toast from "react-hot-toast";
 import { getHomeFeed as getHomeFeedSlice } from "./tweetSlice";
 import { getProfileFeed as getProfileFeedSlice } from "./tweetSlice";
 import axios from "axios";
 
+interface fetchFollowingFeedThunkProps {
+  userToken: string;
+  silentRefresh?: boolean;
+}
+
 export const fetchFollowingFeedThunk = createAsyncThunk(
   "tweet/fetchTweetsFeed",
-  async (userToken: string, { dispatch, rejectWithValue }) => {
+  async (
+    { userToken, silentRefresh }: fetchFollowingFeedThunkProps,
+    { dispatch, rejectWithValue },
+  ) => {
     try {
       const tweets = await getFollowingFeedService(userToken);
 
@@ -30,9 +38,18 @@ export const fetchFollowingFeedThunk = createAsyncThunk(
   },
 );
 
+interface fetchProfileFeedThunkProps {
+  userToken: string;
+  userId: string;
+  silentRefresh?: boolean;
+}
+
 export const fetchProfileFeedThunk = createAsyncThunk(
   "tweet/fetchTweetsProfile",
-  async ({ userToken, userId }: getProfileFeedProps, { dispatch }) => {
+  async (
+    { userToken, userId, silentRefresh }: fetchProfileFeedThunkProps,
+    { dispatch },
+  ) => {
     const tweets = await getProfileFeedService({
       userToken: userToken,
       userId: userId,
@@ -62,7 +79,9 @@ export const deleteTweetThunk = createAsyncThunk(
       fetchProfileFeedThunk({ userToken: userToken, userId: userId }),
     );
 
-    await dispatch(fetchFollowingFeedThunk(userToken));
+    await dispatch(
+      fetchFollowingFeedThunk({ userToken: userToken, silentRefresh: true }),
+    );
 
     toast.success("Tweet excluído!");
   },
@@ -85,10 +104,12 @@ export const createTweetThunk = createAsyncThunk(
       userToken: userToken,
     });
 
-    await dispatch(fetchFollowingFeedThunk(userToken));
-
     await dispatch(
-      fetchProfileFeedThunk({ userToken: userToken, userId: userId }),
+      fetchProfileFeedThunk({
+        userToken: userToken,
+        userId: userId,
+        silentRefresh: true,
+      }),
     );
     toast.success("Tweet postado!");
   },
@@ -110,6 +131,7 @@ interface LikeUnlikeTweetThunkProps {
   tweetId: string;
   userToken: string;
   userId: string;
+  silent?: boolean;
 }
 
 export const likeTweetThunk = createAsyncThunk(

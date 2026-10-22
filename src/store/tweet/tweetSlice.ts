@@ -11,6 +11,7 @@ type TweetState = {
   profile: Tweet[];
   isFeedLoading: boolean;
   isDeletingTweet: boolean;
+  silentRefresh: boolean;
 };
 
 const initialState: TweetState = {
@@ -18,6 +19,7 @@ const initialState: TweetState = {
   profile: [],
   isFeedLoading: false,
   isDeletingTweet: false,
+  silentRefresh: false,
 };
 
 const tweetSlice = createSlice({
@@ -48,16 +50,22 @@ const tweetSlice = createSlice({
       .addCase(fetchFollowingFeedThunk.rejected, (state) => {
         state.isFeedLoading = false;
       })
-      .addCase(fetchProfileFeedThunk.pending, (state) => {
+      .addCase(fetchProfileFeedThunk.pending, (state, action) => {
         if (!state.isDeletingTweet) {
-          state.isFeedLoading = true;
+          if (!action.meta.arg.silentRefresh) {
+            state.isFeedLoading = true;
+          }
         }
       })
-      .addCase(fetchProfileFeedThunk.fulfilled, (state) => {
-        state.isFeedLoading = false;
+      .addCase(fetchProfileFeedThunk.fulfilled, (state, action) => {
+        if (!action.meta.arg.silentRefresh) {
+          state.isFeedLoading = false;
+        }
       })
-      .addCase(fetchProfileFeedThunk.rejected, (state) => {
-        state.isFeedLoading = false;
+      .addCase(fetchProfileFeedThunk.rejected, (state, action) => {
+        if (!action.meta.arg.silentRefresh) {
+          state.isFeedLoading = false;
+        }
       })
       .addCase(deleteTweetThunk.pending, (state) => {
         if (!state.isFeedLoading) {
