@@ -39,9 +39,11 @@ const tweetSlice = createSlice({
 
   extraReducers: (builder) => {
     builder
-      .addCase(fetchFollowingFeedThunk.pending, (state) => {
+      .addCase(fetchFollowingFeedThunk.pending, (state, action) => {
         if (!state.isDeletingTweet) {
-          state.isFeedLoading = true;
+          if (!action.meta.arg.silentRefresh) {
+            state.isFeedLoading = true;
+          }
         }
       })
       .addCase(fetchFollowingFeedThunk.fulfilled, (state) => {

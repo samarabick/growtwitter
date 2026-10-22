@@ -15,7 +15,9 @@ export function Home() {
   useEffect(() => {
     async function fetchFeed() {
       try {
-        await dispatch(fetchFollowingFeedThunk(userLogged.token)).unwrap();
+        await dispatch(
+          fetchFollowingFeedThunk({ userToken: userLogged.token }),
+        ).unwrap();
       } catch (error) {
         toast.error(error as string);
         navigate("/");
@@ -37,7 +39,9 @@ export function Home() {
     <>
       <div>
         <Feed
-          fetchFeed={() => dispatch(fetchFollowingFeedThunk(userLogged.token))}
+          fetchFeed={() =>
+            dispatch(fetchFollowingFeedThunk({ userToken: userLogged.token }))
+          }
           type="home"
         />
       </div>

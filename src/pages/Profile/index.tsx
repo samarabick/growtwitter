@@ -38,8 +38,6 @@ export function Profile() {
     loadProfile();
   }, [profileId]);
 
-  fetchProfileFeedThunk({ userToken: userLogged.token, userId: profileId });
-
   // Carregar perfil do usuário logado
   useEffect(() => {
     dispatch(
@@ -48,7 +46,10 @@ export function Profile() {
         userToken: userLogged.token,
       }),
     );
-  }, [userLogged.token, userLoggedProfile.following]);
+    dispatch(
+      fetchProfileFeedThunk({ userToken: userLogged.token, userId: profileId }),
+    );
+  }, [userLogged.token]);
 
   // Variáveis utilizadas no componente
 

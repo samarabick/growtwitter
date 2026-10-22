@@ -5,7 +5,6 @@ import { useAppDispatch, useAppSelector } from "../../store";
 import { useState } from "react";
 import {
   deleteTweetThunk,
-  fetchFollowingFeedThunk,
   likeTweetThunk,
   unlikeTweetThunk,
 } from "../../store/tweet/tweetThunks";
@@ -19,9 +18,16 @@ interface Props {
   userToken: string;
   userId: string;
   isNotReply: boolean;
+  type: string;
 }
 
-export function TweetsFeed({ tweet, userToken, userId, isNotReply }: Props) {
+export function TweetsFeed({
+  tweet,
+  userToken,
+  userId,
+  isNotReply,
+  type,
+}: Props) {
   // Variáveis
   const dispatch = useAppDispatch();
   const userLogged = useAppSelector((state) => state.user.user);
@@ -37,6 +43,8 @@ export function TweetsFeed({ tweet, userToken, userId, isNotReply }: Props) {
 
   // Se o usuário logado já curtiu, descurte
   // Se não curtiu, curte
+  // type: serve para indicar qual feed re-renderizar na chamada da API,
+  // para atualizar quando houver um novo tweet, like, deslike
   async function handleLike() {
     if (userLiked) {
       await dispatch(
@@ -44,18 +52,18 @@ export function TweetsFeed({ tweet, userToken, userId, isNotReply }: Props) {
           tweetId: tweet.id,
           userToken: userToken,
           userId: userIdLogged,
+          type: type,
         }),
       );
-      await dispatch(fetchFollowingFeedThunk(userLogged.token));
     } else {
       await dispatch(
         likeTweetThunk({
           tweetId: tweet.id,
           userToken: userToken,
           userId: userIdLogged,
+          type: type,
         }),
       );
-      await dispatch(fetchFollowingFeedThunk(userLogged.token));
     }
   }
 
@@ -201,6 +209,7 @@ export function TweetsFeed({ tweet, userToken, userId, isNotReply }: Props) {
               userImage={userLogged.image}
               isReplyModalOpen={isReplyModalOpen}
               closeReplyModal={closeReplyModal}
+              type={type}
             />
           </div>
         </div>
@@ -216,6 +225,7 @@ export function TweetsFeed({ tweet, userToken, userId, isNotReply }: Props) {
                 userToken={userToken}
                 userId={userId}
                 isNotReply={false}
+                type={type}
               />
             ))
           ) : (

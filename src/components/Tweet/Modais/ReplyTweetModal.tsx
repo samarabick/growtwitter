@@ -10,6 +10,7 @@ interface Props {
   userImage: string | undefined;
   isReplyModalOpen: boolean;
   closeReplyModal: () => void;
+  type: string;
 }
 export function ReplyTweetModal({
   tweet,
@@ -18,6 +19,7 @@ export function ReplyTweetModal({
   userImage,
   isReplyModalOpen,
   closeReplyModal,
+  type,
 }: Props) {
   return (
     <>
@@ -34,6 +36,8 @@ export function ReplyTweetModal({
                   tweet={tweet}
                   userToken={userToken}
                   userId={userId}
+                  isNotReply={true}
+                  type={type}
                 />
               </div>
               <div className="my-4">
@@ -46,6 +50,8 @@ export function ReplyTweetModal({
                   userToken={userToken}
                   userImage={userImage}
                   onSubmit={closeReplyModal}
+                  userId={userId}
+                  type={type}
                 />
               </div>
             </Description>

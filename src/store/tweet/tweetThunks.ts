@@ -8,8 +8,6 @@ import {
   unlikeTweet as unlikeTweetService,
   replyTweet as replyTweetService,
 } from "./tweetService";
-// import { type getProfileFeedProps } from "./tweetService";
-import { type ReplyTweetProps } from "./tweetService";
 import toast from "react-hot-toast";
 import { getHomeFeed as getHomeFeedSlice } from "./tweetSlice";
 import { getProfileFeed as getProfileFeedSlice } from "./tweetSlice";
@@ -23,7 +21,7 @@ interface fetchFollowingFeedThunkProps {
 export const fetchFollowingFeedThunk = createAsyncThunk(
   "tweet/fetchTweetsFeed",
   async (
-    { userToken, silentRefresh }: fetchFollowingFeedThunkProps,
+    { userToken }: fetchFollowingFeedThunkProps,
     { dispatch, rejectWithValue },
   ) => {
     try {
@@ -46,10 +44,7 @@ interface fetchProfileFeedThunkProps {
 
 export const fetchProfileFeedThunk = createAsyncThunk(
   "tweet/fetchTweetsProfile",
-  async (
-    { userToken, userId, silentRefresh }: fetchProfileFeedThunkProps,
-    { dispatch },
-  ) => {
+  async ({ userToken, userId }: fetchProfileFeedThunkProps, { dispatch }) => {
     const tweets = await getProfileFeedService({
       userToken: userToken,
       userId: userId,
@@ -115,14 +110,41 @@ export const createTweetThunk = createAsyncThunk(
   },
 );
 
+// RESPONDER TWEET
+// type: serve para indicar qual feed re-renderizar na chamada da API,
+// para atualizar quando houver um novo tweet, like, deslike
+interface ReplyTweetThunkProps {
+  content: string;
+  tweetId: string;
+  userToken: string;
+  userId: string;
+  type?: string;
+}
+
 export const replyTweetThunk = createAsyncThunk(
   "tweet/replyTweet",
-  async ({ content, tweetId, userToken }: ReplyTweetProps) => {
+  async (
+    { content, tweetId, userToken, userId, type }: ReplyTweetThunkProps,
+    { dispatch },
+  ) => {
     await replyTweetService({
       content: content,
       tweetId: tweetId,
       userToken: userToken,
     });
+    if (type === "home") {
+      dispatch(
+        fetchFollowingFeedThunk({ userToken: userToken, silentRefresh: true }),
+      );
+    } else {
+      dispatch(
+        fetchProfileFeedThunk({
+          userId: userId,
+          userToken: userToken,
+          silentRefresh: true,
+        }),
+      );
+    }
     toast.success("Tweet postado!");
   },
 );
@@ -132,26 +154,64 @@ interface LikeUnlikeTweetThunkProps {
   userToken: string;
   userId: string;
   silent?: boolean;
+  type?: string;
 }
+
+// CURTIR - DESCURTIR
+
+// type: serve para indicar qual feed re-renderizar na chamada da API,
+// para atualizar quando houver um novo tweet, like, deslike
 
 export const likeTweetThunk = createAsyncThunk(
   "tweets/like",
-  async ({ tweetId, userToken }: LikeUnlikeTweetThunkProps) => {
+  async (
+    { tweetId, userToken, type, userId }: LikeUnlikeTweetThunkProps,
+    { dispatch },
+  ) => {
     const result = await likeTweetService({
       tweetId: tweetId,
       userToken: userToken,
     });
+    if (type === "home") {
+      dispatch(
+        fetchFollowingFeedThunk({ userToken: userToken, silentRefresh: true }),
+      );
+    } else {
+      dispatch(
+        fetchProfileFeedThunk({
+          userId: userId,
+          userToken: userToken,
+          silentRefresh: true,
+        }),
+      );
+    }
     return result;
   },
 );
 
 export const unlikeTweetThunk = createAsyncThunk(
   "tweets/unlike",
-  async ({ tweetId, userToken }: LikeUnlikeTweetThunkProps) => {
+  async (
+    { tweetId, userToken, userId, type }: LikeUnlikeTweetThunkProps,
+    { dispatch },
+  ) => {
     const result = await unlikeTweetService({
       tweetId: tweetId,
       userToken: userToken,
     });
+    if (type === "home") {
+      dispatch(
+        fetchFollowingFeedThunk({ userToken: userToken, silentRefresh: true }),
+      );
+    } else {
+      dispatch(
+        fetchProfileFeedThunk({
+          userId: userId,
+          userToken: userToken,
+          silentRefresh: true,
+        }),
+      );
+    }
     return result;
   },
 );

@@ -5,10 +5,19 @@ interface Props {
   tweetId: string;
   userToken: string;
   userImage: string | undefined;
+  userId: string;
+  type: string;
   onSubmit: () => void;
 }
 
-export function ReplyTweet({ tweetId, userToken, userImage, onSubmit }: Props) {
+export function ReplyTweet({
+  tweetId,
+  userToken,
+  userId,
+  type,
+  userImage,
+  onSubmit,
+}: Props) {
   // Variáveis
   const [text, setText] = useState("");
   const dispatch = useAppDispatch();
@@ -40,6 +49,8 @@ export function ReplyTweet({ tweetId, userToken, userImage, onSubmit }: Props) {
                 content: text,
                 tweetId: tweetId,
                 userToken: userToken,
+                userId: userId,
+                type: type,
               }),
             );
             setText("");
