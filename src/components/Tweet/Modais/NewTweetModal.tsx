@@ -2,11 +2,13 @@ import { Description, Dialog, DialogPanel } from "@headlessui/react";
 import { NewTweet } from "../NewTweet";
 
 interface Props {
+  type: string;
   isNewTweetModalOpen: boolean;
   closeNewTweetModal: () => void;
 }
 
 export function NewTweetModal({
+  type,
   isNewTweetModalOpen,
   closeNewTweetModal,
 }: Props) {
@@ -20,7 +22,11 @@ export function NewTweetModal({
         <div className="fixed inset-0 flex w-screen items-center justify-center p-4 backdrop-blur-[1.5px] bg-black/15">
           <DialogPanel className="relative max-w-3xl max space-y-6 modal">
             <Description>
-              <NewTweet onSubmit={closeNewTweetModal} />
+              {type === "/home" ? (
+                <NewTweet onSubmit={closeNewTweetModal} type="/home" />
+              ) : (
+                <NewTweet onSubmit={closeNewTweetModal} type={type} />
+              )}
             </Description>
             {/* Botão de fechar modal  */}
             <div className="flex gap-4">

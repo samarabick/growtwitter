@@ -57,12 +57,13 @@ interface DeleteTweetThunkProps {
   tweetId: string;
   userToken: string;
   userId: string;
+  type: string;
 }
 
 export const deleteTweetThunk = createAsyncThunk(
   "tweet/deleteTweet",
   async (
-    { tweetId, userToken, userId }: DeleteTweetThunkProps,
+    { tweetId, userToken, userId, type }: DeleteTweetThunkProps,
     { dispatch },
   ) => {
     await deleteTweetService({
@@ -70,13 +71,19 @@ export const deleteTweetThunk = createAsyncThunk(
       userToken,
     });
 
-    await dispatch(
-      fetchProfileFeedThunk({ userToken: userToken, userId: userId }),
-    );
-
-    await dispatch(
-      fetchFollowingFeedThunk({ userToken: userToken, silentRefresh: true }),
-    );
+    if (type === "home") {
+      dispatch(
+        fetchFollowingFeedThunk({ userToken: userToken, silentRefresh: true }),
+      );
+    } else {
+      dispatch(
+        fetchProfileFeedThunk({
+          userId: userId,
+          userToken: userToken,
+          silentRefresh: true,
+        }),
+      );
+    }
 
     toast.success("Tweet excluído!");
   },
@@ -86,12 +93,13 @@ interface CreateTweetThunkProps {
   contentTweet: string;
   userToken: string;
   userId: string;
+  type: string;
 }
 
 export const createTweetThunk = createAsyncThunk(
   "tweet/createTweet",
   async (
-    { contentTweet, userToken, userId }: CreateTweetThunkProps,
+    { contentTweet, userToken, userId, type }: CreateTweetThunkProps,
     { dispatch },
   ) => {
     await createTweetService({
@@ -99,13 +107,19 @@ export const createTweetThunk = createAsyncThunk(
       userToken: userToken,
     });
 
-    await dispatch(
-      fetchProfileFeedThunk({
-        userToken: userToken,
-        userId: userId,
-        silentRefresh: true,
-      }),
-    );
+    if (type === "/home") {
+      dispatch(
+        fetchFollowingFeedThunk({ userToken: userToken, silentRefresh: true }),
+      );
+    } else {
+      dispatch(
+        fetchProfileFeedThunk({
+          userId: userId,
+          userToken: userToken,
+          silentRefresh: true,
+        }),
+      );
+    }
     toast.success("Tweet postado!");
   },
 );

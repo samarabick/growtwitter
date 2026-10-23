@@ -4,17 +4,20 @@ import { useAppDispatch, useAppSelector } from "../../store";
 import { createTweetThunk } from "../../store/tweet/tweetThunks";
 import { Zoomies } from "ldrs/react";
 import "ldrs/react/Zoomies.css";
+import { useParams } from "react-router-dom";
 
 interface Props {
+  type: string;
   onSubmit: () => void;
 }
 
-export function NewTweet({ onSubmit }: Props) {
+export function NewTweet({ onSubmit, type }: Props) {
   // Variáveis
   const [text, setText] = useState("");
   const userLogged = useAppSelector((state) => state.user.user);
   const userToken = userLogged.token;
-  const userId = userLogged.id;
+  const params = useParams();
+  const userProfileId = params.id!;
   const dispatch = useAppDispatch();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -60,7 +63,8 @@ export function NewTweet({ onSubmit }: Props) {
               createTweetThunk({
                 contentTweet: text,
                 userToken: userToken,
-                userId: userId,
+                userId: userProfileId,
+                type: type,
               }),
             );
 

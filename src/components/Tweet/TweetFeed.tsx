@@ -16,7 +16,7 @@ import { ReplyTweetModal } from "./Modais/ReplyTweetModal";
 interface Props {
   tweet: Tweet;
   userToken: string;
-  userId: string;
+  userProfileId: string;
   isNotReply: boolean;
   type: string;
 }
@@ -24,7 +24,7 @@ interface Props {
 export function TweetsFeed({
   tweet,
   userToken,
-  userId,
+  userProfileId,
   isNotReply,
   type,
 }: Props) {
@@ -51,7 +51,7 @@ export function TweetsFeed({
         unlikeTweetThunk({
           tweetId: tweet.id,
           userToken: userToken,
-          userId: userIdLogged,
+          userId: userProfileId,
           type: type,
         }),
       );
@@ -60,7 +60,7 @@ export function TweetsFeed({
         likeTweetThunk({
           tweetId: tweet.id,
           userToken: userToken,
-          userId: userIdLogged,
+          userId: userProfileId,
           type: type,
         }),
       );
@@ -82,7 +82,8 @@ export function TweetsFeed({
       deleteTweetThunk({
         tweetId: tweet.id,
         userToken: userToken,
-        userId: userId,
+        userId: userProfileId,
+        type: type,
       }),
     ).unwrap();
   }
@@ -168,7 +169,7 @@ export function TweetsFeed({
 
           {/* Excluir */}
 
-          {tweet.author.id === userId && (
+          {tweet.author.id === userLogged.id && (
             <button title="Excluir">
               <TrashIcon
                 className="size-4.5 inline"
@@ -205,7 +206,7 @@ export function TweetsFeed({
             <ReplyTweetModal
               tweet={tweet}
               userToken={userToken}
-              userId={userId}
+              userId={userProfileId}
               userImage={userLogged.image}
               isReplyModalOpen={isReplyModalOpen}
               closeReplyModal={closeReplyModal}
@@ -223,7 +224,7 @@ export function TweetsFeed({
               <TweetsFeed
                 tweet={reply}
                 userToken={userToken}
-                userId={userId}
+                userProfileId={userProfileId}
                 isNotReply={false}
                 type={type}
               />

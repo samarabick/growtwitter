@@ -142,13 +142,14 @@ export function MainLayout() {
           <NewTweetModal
             isNewTweetModalOpen={isNewTweetModalOpen}
             closeNewTweetModal={closeNewTweetModal}
+            type={location}
           />
         </aside>
         <div className="border border-tututu rounded-4xl bg-tututu2 mx-3">
           {/* Novo tweet  */}
           {location === "/home" && (
             <div className="not-xl:hidden justify-self-center py-5 ">
-              <NewTweet onSubmit={closeNewTweetModal} />
+              <NewTweet onSubmit={closeNewTweetModal} type={location} />
             </div>
           )}
           <div>

@@ -14,10 +14,11 @@ export function Feed({ fetchFeed, type }: Props) {
   // Variáveis
   const userLogged = useAppSelector((state) => state.user.user);
   const userToken = userLogged.token;
-  const userId = userLogged.id;
+  // const userLoggedId = userLogged.id;
+  const params = useParams();
+  const userProfileId = params.id!;
   const navigate = useNavigate();
   const feedState = useAppSelector((state) => state.feed.isFeedLoading);
-  const params = useParams();
 
   // Indica se deve chamar home ou profile da store
 
@@ -31,7 +32,7 @@ export function Feed({ fetchFeed, type }: Props) {
 
   useEffect(() => {
     fetchFeed();
-  }, [userToken, params]);
+  }, [userToken, userProfileId]);
 
   // Redireciona para tela de login quando o userToken for vazio
   useEffect(() => {
@@ -60,7 +61,7 @@ export function Feed({ fetchFeed, type }: Props) {
                 <TweetsFeed
                   tweet={tweet}
                   userToken={userToken}
-                  userId={userId}
+                  userProfileId={userProfileId}
                   isNotReply={true}
                   type={type}
                 />
